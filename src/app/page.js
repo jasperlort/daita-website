@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 const SplatViewer = dynamic(() => import('../components/SplatViewer'), { ssr: false });
 const ParticleHero = dynamic(() => import('../components/ParticleHero'), { ssr: false });
 
-// ââ Fade-in animation wrapper ââ
+// ── Fade-in animation wrapper ──
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
@@ -25,9 +25,10 @@ function Reveal({ children, delay = 0, className = '' }) {
   );
 }
 
-// ââ Nav ââ
+// ── Nav ──
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -35,20 +36,59 @@ function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth > 768) setMobileOpen(false); };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   return (
-    <nav style={{
+    <nav className="site-nav" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       padding: '1.2rem 2rem',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      background: scrolled ? 'rgba(8,8,12,0.85)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(20px)' : 'none',
+      flexWrap: 'wrap',
+      background: scrolled || mobileOpen ? 'rgba(8,8,12,0.95)' : 'transparent',
+      backdropFilter: scrolled || mobileOpen ? 'blur(20px)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(255,255,255,0.04)' : '1px solid transparent',
       transition: 'all 0.4s ease',
     }}>
       <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
         <img src="/logo.svg" alt="DAITA" style={{ height: 32 }} />
       </a>
-      <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+
+      {/* Hamburger button — mobile only */}
+      <button
+        className="nav-hamburger"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        aria-label="Toggle menu"
+        style={{
+          display: 'none', background: 'none', border: 'none', cursor: 'pointer',
+          flexDirection: 'column', gap: 5, padding: 8,
+        }}
+      >
+        <span style={{
+          display: 'block', width: 22, height: 2, background: '#C4A265',
+          transition: 'all 0.3s',
+          transform: mobileOpen ? 'rotate(45deg) translate(3px, 3px)' : 'none',
+        }} />
+        <span style={{
+          display: 'block', width: 22, height: 2, background: '#C4A265',
+          transition: 'all 0.3s',
+          opacity: mobileOpen ? 0 : 1,
+        }} />
+        <span style={{
+          display: 'block', width: 22, height: 2, background: '#C4A265',
+          transition: 'all 0.3s',
+          transform: mobileOpen ? 'rotate(-45deg) translate(3px, -3px)' : 'none',
+        }} />
+      </button>
+
+      {/* Desktop links */}
+      <div className="nav-links" style={{
+        display: 'flex', gap: '2.5rem', alignItems: 'center',
+      }}>
         {['Technology', 'How It Works', 'Vision'].map(item => (
           <a key={item} href={`#${item.toLowerCase().replace(/\s/g, '-')}`} style={{
             color: '#999', textDecoration: 'none', fontSize: '0.8rem',
@@ -64,11 +104,41 @@ function Nav() {
           JOIN NETWORK
         </a>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          style={{
+            width: '100%', display: 'flex', flexDirection: 'column',
+            gap: '1.5rem', padding: '1.5rem 0 1rem',
+          }}
+        >
+          {['Technology', 'How It Works', 'Vision'].map(item => (
+            <a key={item} href={`#${item.toLowerCase().replace(/\s/g, '-')}`}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                color: '#999', textDecoration: 'none', fontSize: '0.85rem',
+                letterSpacing: '0.12em', fontWeight: 500,
+              }}
+            >
+              {item.toUpperCase()}
+            </a>
+          ))}
+          <a href="#contact" className="btn-primary"
+            onClick={() => setMobileOpen(false)}
+            style={{ padding: '0.6rem 1.5rem', fontSize: '0.75rem', textAlign: 'center' }}>
+            JOIN NETWORK
+          </a>
+        </motion.div>
+      )}
     </nav>
   );
 }
 
-// ââ Hero Section ââ
+// ── Hero Section ──
 function Hero() {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 600], [1, 0]);
@@ -92,7 +162,7 @@ function Hero() {
         background: 'linear-gradient(to top, #08080C, transparent)',
       }} />
 
-      <motion.div style={{ opacity, y, position: 'relative', zIndex: 2, padding: '0 4rem', maxWidth: 800 }}>
+      <motion.div className="hero-content" style={{ opacity, y, position: 'relative', zIndex: 2, maxWidth: 800 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -135,7 +205,8 @@ function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
-          style={{ display: 'flex', gap: '1rem' }}
+          className="hero-buttons"
+          style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
         >
           <a href="#technology" className="btn-primary">EXPLORE THE TECH</a>
           <a href="#how-it-works" className="btn-outline">HOW IT WORKS</a>
@@ -160,7 +231,7 @@ function Hero() {
   );
 }
 
-// ââ Stats Bar ââ
+// ── Stats Bar ──
 function StatsBar() {
   return (
     <section style={{
@@ -168,11 +239,11 @@ function StatsBar() {
       borderBottom: '1px solid rgba(255,255,255,0.04)',
       padding: '3rem 0',
     }}>
-      <div className="container" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem',
+      <div className="container grid-4" style={{
+        display: 'grid', gap: '2rem',
       }}>
         {[
-          { value: '360Â°', label: 'Spatial Capture' },
+          { value: '360°', label: 'Spatial Capture' },
           { value: '$280B+', label: 'Market by 2030' },
           { value: '<24h', label: 'To Gaussian Splats' },
           { value: '100%', label: 'Crowdsourced' },
@@ -194,7 +265,7 @@ function StatsBar() {
   );
 }
 
-// ââ Technology Section with Splat Viewer ââ
+// ── Technology Section with Splat Viewer ──
 function TechnologySection() {
   return (
     <section id="technology" style={{ padding: '8rem 0', position: 'relative' }}>
@@ -211,7 +282,7 @@ function TechnologySection() {
           <h2 className="section-title">From raw footage to<br />Gaussian Splats</h2>
           <p className="section-subtitle" style={{ marginBottom: '4rem' }}>
             Our pipeline transforms 360-degree video into photorealistic 3D environments using
-            state-of-the-art 3D Gaussian Splatting â the same technology being standardized by
+            state-of-the-art 3D Gaussian Splatting — the same technology being standardized by
             Khronos, NVIDIA, and Apple.
           </p>
         </Reveal>
@@ -255,8 +326,8 @@ function TechnologySection() {
         </Reveal>
 
         {/* Pipeline steps */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem',
+        <div className="grid-4" style={{
+          display: 'grid', gap: '1.5rem',
         }}>
           {[
             { num: '01', title: '360 Capture', desc: 'Raw 8K spherical video from thousands of contributors worldwide.' },
@@ -284,7 +355,7 @@ function TechnologySection() {
   );
 }
 
-// ââ How It Works ââ
+// ── How It Works ──
 function HowItWorks() {
   return (
     <section id="how-it-works" style={{
@@ -301,7 +372,7 @@ function HowItWorks() {
           </p>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+        <div className="grid-3" style={{ display: 'grid', gap: '2rem' }}>
           {[
             {
               icon: (
@@ -310,7 +381,7 @@ function HowItWorks() {
                 </svg>
               ),
               title: 'Get a Camera',
-              desc: 'We provide 360-degree cameras at cost price. Mount on your car dashboard, bike helmet, or backpack. No expensive equipment â just a small, weatherproof device.',
+              desc: 'We provide 360-degree cameras at cost price. Mount on your car dashboard, bike helmet, or backpack. No expensive equipment — just a small, weatherproof device.',
             },
             {
               icon: (
@@ -319,7 +390,7 @@ function HowItWorks() {
                 </svg>
               ),
               title: 'Capture the World',
-              desc: 'Walk, bike, or drive as you normally would. The camera captures continuously. Our app handles background uploading over WiFi â zero extra effort.',
+              desc: 'Walk, bike, or drive as you normally would. The camera captures continuously. Our app handles background uploading over WiFi — zero extra effort.',
             },
             {
               icon: (
@@ -356,7 +427,7 @@ function HowItWorks() {
   );
 }
 
-// ââ Vision Section ââ
+// ── Vision Section ──
 function VisionSection() {
   return (
     <section id="vision" style={{
@@ -395,12 +466,12 @@ function VisionSection() {
           </p>
         </Reveal>
 
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem',
+        <div className="grid-4" style={{
+          display: 'grid', gap: '2rem',
           maxWidth: 900, margin: '0 auto',
         }}>
           {[
-            { title: 'Navigation', desc: 'Beyond flat maps â true 3D spatial wayfinding' },
+            { title: 'Navigation', desc: 'Beyond flat maps — true 3D spatial wayfinding' },
             { title: 'Commerce', desc: 'Spatial retail, location intelligence, AR advertising' },
             { title: 'Simulation', desc: 'Autonomous vehicle & robotics training environments' },
             { title: 'AI Infrastructure', desc: 'The world model that powers the next generation of AI' },
@@ -413,7 +484,7 @@ function VisionSection() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '1.2rem', color: 'var(--gold)',
                 }}>
-                  {['â', 'â', 'â¬¡', 'â'][i]}
+                  {['◎', '◈', '⬡', '◉'][i]}
                 </div>
                 <h3 style={{ color: '#fff', fontSize: '1rem', fontWeight: 600, marginBottom: '0.4rem' }}>
                   {p.title}
@@ -428,7 +499,7 @@ function VisionSection() {
   );
 }
 
-// ââ Competitive Edge ââ
+// ── Competitive Edge ──
 function CompetitiveSection() {
   const competitors = [
     ['360 capture', 'Yes', 'No', 'No', 'Yes'],
@@ -455,11 +526,11 @@ function CompetitiveSection() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <div style={{
+          <div className="table-scroll-wrapper" style={{
             borderRadius: 16, overflow: 'hidden',
             border: '1px solid rgba(255,255,255,0.06)',
           }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
               <thead>
                 <tr>
                   {['', 'DAITA', 'Hivemapper', 'Mapillary', 'Google SV'].map((h, i) => (
@@ -486,7 +557,7 @@ function CompetitiveSection() {
                         background: ci === 1 ? 'rgba(196,162,101,0.03)' : 'transparent',
                         borderBottom: ri < competitors.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none',
                       }}>
-                        {ci === 1 && cell === 'Yes' ? 'â Yes' : cell}
+                        {ci === 1 && cell === 'Yes' ? '✓ Yes' : cell}
                       </td>
                     ))}
                   </tr>
@@ -500,7 +571,7 @@ function CompetitiveSection() {
   );
 }
 
-// ââ CTA / Contact ââ
+// ── CTA / Contact ──
 function ContactSection() {
   return (
     <section id="contact" style={{
@@ -526,7 +597,7 @@ function ContactSection() {
             color: '#666', fontSize: '1rem', maxWidth: 500, margin: '0 auto 2.5rem',
             lineHeight: 1.8,
           }}>
-            Investor, collector, or enterprise customer â we'd love to hear from you.
+            Investor, collector, or enterprise customer — we'd love to hear from you.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="mailto:jasper@aerointel.eu" className="btn-primary">
@@ -542,15 +613,16 @@ function ContactSection() {
   );
 }
 
-// ââ Footer ââ
+// ── Footer ──
 function Footer() {
   return (
     <footer style={{
       padding: '2rem 0', borderTop: '1px solid rgba(255,255,255,0.04)',
       textAlign: 'center',
     }}>
-      <div className="container" style={{
+      <div className="container footer-inner" style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        flexWrap: 'wrap', gap: '1rem',
       }}>
         <img src="/logo.svg" alt="DAITA" style={{ height: 24, opacity: 0.5 }} />
         <p style={{ color: '#444', fontSize: '0.75rem', letterSpacing: '0.1em' }}>
@@ -561,7 +633,7 @@ function Footer() {
   );
 }
 
-// ââ Main Page ââ
+// ── Main Page ──
 export default function Home() {
   return (
     <>
