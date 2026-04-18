@@ -1,0 +1,29 @@
+# Node / Next
+node_modules/
+.next/
+.vercel/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python / conda
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Nerfstudio / 3DGS pipeline artefacts
+pipeline/frames/
+pipeline/data/
+pipeline/outputs/
+pipeline/exports/
+pipeline/colmap/
+pipeline/**/*.ply
+pipeline/**/*.splat
+pipeline/**/*.ksplat
+
+# Keep the input video + scripts + docs tracked
+!pipeline/input/
