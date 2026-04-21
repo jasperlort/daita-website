@@ -1,651 +1,657 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import dynamic from 'next/dynamic';
+import { useEffect, useRef } from 'react';
 
-// Lazy load heavy 3D components
-const SplatViewer = dynamic(() => import('../components/SplatViewer'), { ssr: false });
-const ParticleHero = dynamic(() => import('../components/ParticleHero'), { ssr: false });
+const TICKER_ITEMS = [
+  '<span>3D <b>reconstruction</b></span>',
+  '<span>Gaussian <b>splats</b></span>',
+  '<span>Decentralized <b>capture</b></span>',
+  '<span>Photogrammetric <b>mesh</b></span>',
+  '<span><b>Digital</b> twins</span>',
+  '<span><b>Sim</b>-to-real</span>',
+  '<span>Pose-aligned <b>video</b></span>',
+  '<span>Crowd-scale <b>coverage</b></span>',
+  '<span>Fresh <b>every week</b></span>',
+  '<span>Global by <b>design</b></span>',
+];
 
-// ── Fade-in animation wrapper ──
-function Reveal({ children, delay = 0, className = '' }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ── Nav ──
-function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+export default function Page() {
+  const heroRef = useRef(null);
+  const navRef = useRef(null);
+  const wordmarkRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    if (window.matchMedia('(hover: none)').matches) return;
+    const cur = document.getElementById('cursor');
+    if (!cur) return;
+    const onMove = (e) => {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top = e.clientY + 'px';
+    };
+    document.addEventListener('mousemove', onMove);
+    const targets = document.querySelectorAll('a, .card, .step, .use, .who');
+    const enter = () => cur.classList.add('big');
+    const leave = () => cur.classList.remove('big');
+    targets.forEach((el) => {
+      el.addEventListener('mouseenter', enter);
+      el.addEventListener('mouseleave', leave);
+    });
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      targets.forEach((el) => {
+        el.removeEventListener('mouseenter', enter);
+        el.removeEventListener('mouseleave', leave);
+      });
+    };
   }, []);
 
-  // Close mobile menu on resize to desktop
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth > 768) setMobileOpen(false); };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    const nav = navRef.current;
+    const hero = heroRef.current;
+    if (!nav || !hero) return;
+    const io = new IntersectionObserver(
+      ([e]) => nav.classList.toggle('light', !e.isIntersecting),
+      { threshold: 0.08 }
+    );
+    io.observe(hero);
+    return () => io.disconnect();
   }, []);
 
-  return (
-    <nav className="site-nav" style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      padding: '1.2rem 2rem',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      flexWrap: 'wrap',
-      background: scrolled || mobileOpen ? 'rgba(8,8,12,0.95)' : 'transparent',
-      backdropFilter: scrolled || mobileOpen ? 'blur(20px)' : 'none',
-      borderBottom: scrolled ? '1px solid rgba(255,255,255,0.04)' : '1px solid transparent',
-      transition: 'all 0.4s ease',
-    }}>
-      <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-        <img src="/logo.svg" alt="DAITA" style={{ height: 32 }} />
-      </a>
+  useEffect(() => {
+    const el = document.getElementById('ticker');
+    if (el) el.innerHTML = TICKER_ITEMS.join('') + TICKER_ITEMS.join('');
+  }, []);
 
-      {/* Hamburger button — mobile only */}
-      <button
-        className="nav-hamburger"
-        onClick={() => setMobileOpen(!mobileOpen)}
-        aria-label="Toggle menu"
-        style={{
-          display: 'none', background: 'none', border: 'none', cursor: 'pointer',
-          flexDirection: 'column', gap: 5, padding: 8,
-        }}
-      >
-        <span style={{
-          display: 'block', width: 22, height: 2, background: '#C4A265',
-          transition: 'all 0.3s',
-          transform: mobileOpen ? 'rotate(45deg) translate(3px, 3px)' : 'none',
-        }} />
-        <span style={{
-          display: 'block', width: 22, height: 2, background: '#C4A265',
-          transition: 'all 0.3s',
-          opacity: mobileOpen ? 0 : 1,
-        }} />
-        <span style={{
-          display: 'block', width: 22, height: 2, background: '#C4A265',
-          transition: 'all 0.3s',
-          transform: mobileOpen ? 'rotate(-45deg) translate(3px, -3px)' : 'none',
-        }} />
-      </button>
+  useEffect(() => {
+    const hw = wordmarkRef.current;
+    if (!hw) return;
+    const letters = [...hw.querySelectorAll('span')];
+    let t = 0;
+    const id = setInterval(() => {
+      t++;
+      letters.forEach((l) => l.classList.remove('hot'));
+      letters[t % letters.length].classList.add('hot');
+    }, 600);
+    return () => clearInterval(id);
+  }, []);
 
-      {/* Desktop links */}
-      <div className="nav-links" style={{
-        display: 'flex', gap: '2.5rem', alignItems: 'center',
-      }}>
-        {['Technology', 'How It Works', 'Vision'].map(item => (
-          <a key={item} href={`#${item.toLowerCase().replace(/\s/g, '-')}`} style={{
-            color: '#999', textDecoration: 'none', fontSize: '0.8rem',
-            letterSpacing: '0.12em', fontWeight: 500, transition: 'color 0.2s',
-          }}
-            onMouseEnter={e => e.target.style.color = '#C4A265'}
-            onMouseLeave={e => e.target.style.color = '#999'}
-          >
-            {item.toUpperCase()}
-          </a>
-        ))}
-        <a href="#contact" className="btn-primary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.75rem' }}>
-          JOIN NETWORK
-        </a>
-      </div>
+  useEffect(() => {
+    const words = [...document.querySelectorAll('.manifesto__block .w')];
+    const check = () => {
+      const vh = window.innerHeight;
+      for (const w of words) {
+        const r = w.getBoundingClientRect();
+        if (r.top < vh * 0.8) w.classList.add('on');
+        else w.classList.remove('on');
+      }
+    };
+    window.addEventListener('scroll', check, { passive: true });
+    check();
+    return () => window.removeEventListener('scroll', check);
+  }, []);
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          style={{
-            width: '100%', display: 'flex', flexDirection: 'column',
-            gap: '1.5rem', padding: '1.5rem 0 1rem',
-          }}
-        >
-          {['Technology', 'How It Works', 'Vision'].map(item => (
-            <a key={item} href={`#${item.toLowerCase().replace(/\s/g, '-')}`}
-              onClick={() => setMobileOpen(false)}
-              style={{
-                color: '#999', textDecoration: 'none', fontSize: '0.85rem',
-                letterSpacing: '0.12em', fontWeight: 500,
-              }}
-            >
-              {item.toUpperCase()}
-            </a>
-          ))}
-          <a href="#contact" className="btn-primary"
-            onClick={() => setMobileOpen(false)}
-            style={{ padding: '0.6rem 1.5rem', fontSize: '0.75rem', textAlign: 'center' }}>
-            JOIN NETWORK
-          </a>
-        </motion.div>
-      )}
-    </nav>
-  );
-}
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (ents) => {
+        ents.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
-// ── Hero Section ──
-function Hero() {
-  const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const y = useTransform(scrollY, [0, 600], [0, 120]);
+  useEffect(() => {
+    document.querySelectorAll('[data-viz]').forEach((el, i) => {
+      const kind = el.dataset.viz;
+      const w = 320, h = 120;
+      let svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;">`;
+      svg += `<defs><linearGradient id="g${i}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="rgba(47,216,216,0.3)"/><stop offset="1" stop-color="rgba(47,216,216,0)"/></linearGradient></defs>`;
+      svg += `<rect width="${w}" height="${h}" fill="#0C1F22"/>`;
+      for (let x = 0; x < w; x += 20) svg += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="rgba(47,216,216,0.08)"/>`;
+      for (let y = 0; y < h; y += 20) svg += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="rgba(47,216,216,0.08)"/>`;
+      if (kind === 'capture') {
+        svg += `<path d="M20 90 Q80 30 160 70 T300 40" stroke="#2FD8D8" stroke-width="2" fill="none"/>`;
+        const dots = [[40, 78], [100, 50], [180, 66], [240, 58], [290, 42]];
+        dots.forEach(([x, y], k) => {
+          svg += `<circle cx="${x}" cy="${y}" r="4" fill="#FFDC64"/>`;
+          svg += `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="rgba(255,220,100,0.4)"><animate attributeName="r" values="6;14;6" dur="2s" begin="${k * 0.3}s" repeatCount="indefinite"/></circle>`;
+        });
+      } else if (kind === 'upload') {
+        for (let b = 0; b < 18; b++) {
+          const bh = 20 + Math.random() * 70;
+          svg += `<rect x="${10 + b * 17}" y="${h - bh}" width="10" height="${bh}" fill="url(#g${i})" stroke="#2FD8D8" stroke-width="0.5"/>`;
+        }
+      } else if (kind === 'mesh') {
+        const pts = [];
+        for (let y = 1; y < 5; y++) for (let x = 1; x < 10; x++) pts.push([x * 32, y * 22 + (x % 2) * 4]);
+        pts.forEach((p) => (svg += `<circle cx="${p[0]}" cy="${p[1]}" r="1.5" fill="#2FD8D8"/>`));
+        for (let y = 1; y < 5; y++) for (let x = 1; x < 9; x++) {
+          const a = pts[(y - 1) * 9 + (x - 1)], b = pts[(y - 1) * 9 + x];
+          svg += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(47,216,216,0.5)"/>`;
+        }
+        for (let y = 1; y < 4; y++) for (let x = 1; x < 10; x++) {
+          const a = pts[(y - 1) * 9 + (x - 1)], b = pts[y * 9 + (x - 1)];
+          svg += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(47,216,216,0.5)"/>`;
+        }
+      } else if (kind === 'serve') {
+        const labels = ['MESH', 'SPLAT', 'POINTS', 'VIDEO'];
+        for (let k = 0; k < 4; k++) {
+          const y = 20 + k * 24;
+          svg += `<line x1="20" y1="${y}" x2="280" y2="${y}" stroke="rgba(47,216,216,0.3)" stroke-dasharray="3 4"/>`;
+          svg += `<polygon points="280,${y - 4} 290,${y} 280,${y + 4}" fill="#2FD8D8"/>`;
+          svg += `<text x="24" y="${y - 4}" font-family="JetBrains Mono" font-size="9" fill="rgba(47,216,216,0.9)">${labels[k]}</text>`;
+        }
+      }
+      svg += `</svg>`;
+      el.innerHTML = svg;
+    });
+  }, []);
 
-  return (
-    <section style={{
-      position: 'relative', height: '100vh', display: 'flex',
-      alignItems: 'center', overflow: 'hidden',
-    }}>
-      {/* 3D particle background */}
-      <ParticleHero />
+  useEffect(() => {
+    const box = document.getElementById('sensorviz');
+    if (!box) return;
+    const w = 560, h = 220;
+    box.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice"><g id="grid"></g><g id="edges"></g><g id="dots"></g></svg>`;
+    const grid = box.querySelector('#grid');
+    const edges = box.querySelector('#edges');
+    const dots = box.querySelector('#dots');
+    for (let x = 0; x < w; x += 40) grid.innerHTML += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="rgba(47,216,216,0.08)"/>`;
+    for (let y = 0; y < h; y += 40) grid.innerHTML += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="rgba(47,216,216,0.08)"/>`;
+    const N = 18;
+    const pts = Array.from({ length: N }, (_, i) => ({
+      x: 40 + Math.random() * (w - 80),
+      y: 30 + Math.random() * (h - 60),
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      hot: i < 2,
+    }));
+    let raf;
+    const tick = () => {
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 30 || p.x > w - 30) p.vx *= -1;
+        if (p.y < 20 || p.y > h - 20) p.vy *= -1;
+      }
+      let e = '';
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.hypot(dx, dy);
+        if (d < 100) {
+          const a = (1 - d / 100) * 0.5;
+          e += `<line class="sensor-edge" x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[j].x}" y2="${pts[j].y}" style="opacity:${a.toFixed(2)}"/>`;
+        }
+      }
+      edges.innerHTML = e;
+      dots.innerHTML = pts
+        .map((p) => {
+          if (p.hot) return `<circle fill="#FFDC64" cx="${p.x}" cy="${p.y}" r="4" style="filter: drop-shadow(0 0 6px rgba(255,220,100,0.7))"/>`;
+          return `<circle class="sensor-dot" cx="${p.x}" cy="${p.y}" r="2.5"/>`;
+        })
+        .join('');
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
-      {/* Gradient overlays */}
-      <div style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: 'radial-gradient(ellipse at 30% 50%, rgba(196,162,101,0.04) 0%, transparent 60%)',
-      }} />
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: '30vh', zIndex: 1,
-        background: 'linear-gradient(to top, #08080C, transparent)',
-      }} />
+  useEffect(() => {
+    const c = document.getElementById('showcaseCanvas');
+    if (!c) return;
+    const g = c.getContext('2d');
+    let W = 0, H = 0;
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+    const resize = () => {
+      const r = c.getBoundingClientRect();
+      W = r.width; H = r.height;
+      c.width = W * DPR; c.height = H * DPR;
+      g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize);
 
-      <motion.div className="hero-content" style={{ opacity, y, position: 'relative', zIndex: 2, maxWidth: 800 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          <p className="section-label" style={{ marginBottom: '1.5rem' }}>THE DECENTRALIZED VISUAL DATA NETWORK</p>
-        </motion.div>
+    const GW = 6, GD = 6;
+    const buildings = [];
+    for (let i = 0; i < GW; i++) for (let j = 0; j < GD; j++) {
+      buildings.push({ gx: i - GW / 2 + 0.5, gz: j - GD / 2 + 0.5, h: 0.3 + Math.random() * 1.4 });
+    }
+    const project = (x, y, z, cx, cy, s, yaw) => {
+      const x1 = x * Math.cos(yaw) - z * Math.sin(yaw);
+      const z1 = x * Math.sin(yaw) + z * Math.cos(yaw);
+      const px = cx + x1 * s;
+      const py = cy + y * s * -0.7 + z1 * s * 0.45;
+      return [px, py, z1];
+    };
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.5 }}
-          style={{
-            fontFamily: 'var(--font-serif)', fontSize: 'clamp(3rem, 6vw, 5rem)',
-            fontWeight: 600, color: '#fff', lineHeight: 1.08, marginBottom: '1.5rem',
-          }}
-        >
-          We're building a<br />
-          <span style={{
-            background: 'linear-gradient(135deg, #C4A265, #E8D5A8, #C4A265)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite',
-          }}>
-            digital twin
-          </span>
-          {' '}of<br />the entire world.
-        </motion.h1>
+    const t0 = performance.now();
+    let raf;
+    const frame = (now) => {
+      const t = (now - t0) / 1000;
+      g.fillStyle = '#0C1F22'; g.fillRect(0, 0, W, H);
+      g.strokeStyle = 'rgba(47,216,216,0.1)'; g.lineWidth = 1;
+      for (let x = 0; x < W; x += 30) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+      for (let y = 0; y < H; y += 30) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          style={{ fontSize: '1.1rem', color: '#888', maxWidth: 480, lineHeight: 1.8, marginBottom: '2.5rem' }}
-        >
-          Thousands of people with 360-degree cameras, capturing reality and converting it
-          into navigable Gaussian Splats. Get paid per kilometer.
-        </motion.p>
+      const cx = W / 2, cy = H * 0.6;
+      const s = Math.min(W, H) / 10;
+      const yaw = t * 0.22;
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="hero-buttons"
-          style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
-        >
-          <a href="#technology" className="btn-primary">EXPLORE THE TECH</a>
-          <a href="#how-it-works" className="btn-outline">HOW IT WORKS</a>
-        </motion.div>
-      </motion.div>
+      g.strokeStyle = 'rgba(47,216,216,0.25)';
+      for (let i = -GW / 2; i <= GW / 2; i++) {
+        const [a, b] = project(i, 0, -GD / 2, cx, cy, s, yaw);
+        const [c2, d2] = project(i, 0, GD / 2, cx, cy, s, yaw);
+        g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke();
+      }
+      for (let j = -GD / 2; j <= GD / 2; j++) {
+        const [a, b] = project(-GW / 2, 0, j, cx, cy, s, yaw);
+        const [c2, d2] = project(GW / 2, 0, j, cx, cy, s, yaw);
+        g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke();
+      }
 
-      {/* Scroll indicator */}
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-        style={{
-          position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)',
-          zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-        }}
-      >
-        <span style={{ fontSize: '0.65rem', color: '#555', letterSpacing: '0.2em' }}>SCROLL</span>
-        <div style={{
-          width: 1, height: 40, background: 'linear-gradient(to bottom, #C4A265, transparent)',
-        }} />
-      </motion.div>
-    </section>
-  );
-}
+      const withZ = buildings
+        .map((b) => {
+          const [px, py, pz] = project(b.gx, 0, b.gz, cx, cy, s, yaw);
+          return { b, px, py, pz };
+        })
+        .sort((a, b) => a.pz - b.pz);
 
-// ── Stats Bar ──
-function StatsBar() {
-  return (
-    <section style={{
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-      borderBottom: '1px solid rgba(255,255,255,0.04)',
-      padding: '3rem 0',
-    }}>
-      <div className="container grid-4" style={{
-        display: 'grid', gap: '2rem',
-      }}>
-        {[
-          { value: '360°', label: 'Spatial Capture' },
-          { value: '$280B+', label: 'Market by 2030' },
-          { value: '<24h', label: 'To Gaussian Splats' },
-          { value: '100%', label: 'Crowdsourced' },
-        ].map((s, i) => (
-          <Reveal key={i} delay={i * 0.1}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 600,
-                color: 'var(--gold)', marginBottom: 4,
-              }}>{s.value}</div>
-              <div style={{ fontSize: '0.75rem', color: '#555', letterSpacing: '0.15em' }}>
-                {s.label.toUpperCase()}
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
+      for (const bld of withZ) {
+        const { b } = bld;
+        const h = b.h;
+        const corners = [];
+        for (const dy of [0, h]) for (const dz of [-0.45, 0.45]) for (const dx of [-0.45, 0.45]) {
+          corners.push(project(b.gx + dx, dy, b.gz + dz, cx, cy, s, yaw));
+        }
+        const [bl, br, fl, fr, blu, bru, flu, fru] = corners;
+        const scanY = (Math.sin(t * 0.8 + b.gx * 0.2) + 1) * 0.5;
+        const scanInside = Math.abs(scanY - (h / 2)) < 0.2;
+        g.strokeStyle = scanInside ? 'rgba(255, 220, 100, 0.95)' : 'rgba(47,216,216,0.65)';
+        g.lineWidth = scanInside ? 1.5 : 1;
+        g.beginPath(); g.moveTo(bl[0], bl[1]); g.lineTo(br[0], br[1]); g.lineTo(fr[0], fr[1]); g.lineTo(fl[0], fl[1]); g.closePath(); g.stroke();
+        g.beginPath(); g.moveTo(blu[0], blu[1]); g.lineTo(bru[0], bru[1]); g.lineTo(fru[0], fru[1]); g.lineTo(flu[0], flu[1]); g.closePath(); g.stroke();
+        [[bl, blu], [br, bru], [fl, flu], [fr, fru]].forEach(([a, bb]) => { g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(bb[0], bb[1]); g.stroke(); });
+        g.fillStyle = 'rgba(47,216,216,0.8)';
+        corners.forEach((cc) => { g.beginPath(); g.arc(cc[0], cc[1], 1.5, 0, Math.PI * 2); g.fill(); });
+      }
 
-// ── Technology Section with Splat Viewer ──
-function TechnologySection() {
-  return (
-    <section id="technology" style={{ padding: '8rem 0', position: 'relative' }}>
-      {/* Subtle glow */}
-      <div style={{
-        position: 'absolute', top: '20%', left: '-10%', width: 500, height: 500,
-        background: 'radial-gradient(circle, rgba(196,162,101,0.04) 0%, transparent 70%)',
-        borderRadius: '50%', pointerEvents: 'none',
-      }} />
+      const scanAt = (Math.sin(t * 0.5) + 1) * 0.5;
+      const [px0, py0] = project(-GW / 2, scanAt * 1.4, -GD / 2, cx, cy, s, yaw);
+      const [px1, py1] = project(GW / 2, scanAt * 1.4, -GD / 2, cx, cy, s, yaw);
+      const [px2, py2] = project(GW / 2, scanAt * 1.4, GD / 2, cx, cy, s, yaw);
+      const [px3, py3] = project(-GW / 2, scanAt * 1.4, GD / 2, cx, cy, s, yaw);
+      g.fillStyle = 'rgba(255,220,100,0.1)'; g.strokeStyle = 'rgba(255,220,100,0.5)';
+      g.beginPath(); g.moveTo(px0, py0); g.lineTo(px1, py1); g.lineTo(px2, py2); g.lineTo(px3, py3); g.closePath(); g.fill(); g.stroke();
 
-      <div className="container">
-        <Reveal>
-          <p className="section-label">TECHNOLOGY</p>
-          <h2 className="section-title">From raw footage to<br />Gaussian Splats</h2>
-          <p className="section-subtitle" style={{ marginBottom: '4rem' }}>
-            Our pipeline transforms 360-degree video into photorealistic 3D environments using
-            state-of-the-art 3D Gaussian Splatting — the same technology being standardized by
-            Khronos, NVIDIA, and Apple.
-          </p>
-        </Reveal>
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
 
-        {/* Interactive Splat Viewer */}
-        <Reveal delay={0.2}>
-          <div style={{
-            borderRadius: 16, overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.06)',
-            background: 'var(--bg-card)', marginBottom: '4rem',
-            position: 'relative',
-          }}>
-            <div style={{
-              position: 'absolute', top: 16, left: 20, zIndex: 10,
-              display: 'flex', gap: 8, alignItems: 'center',
-            }}>
-              <div style={{
-                width: 8, height: 8, borderRadius: '50%',
-                background: '#C4A265', animation: 'pulse 2s ease infinite',
-              }} />
-              <span style={{ fontSize: '0.7rem', color: '#666', letterSpacing: '0.15em' }}>
-                INTERACTIVE GAUSSIAN SPLAT
-              </span>
-            </div>
-            <div style={{ height: 500 }}>
-              <SplatViewer />
-            </div>
-            <div style={{
-              padding: '1rem 1.5rem',
-              borderTop: '1px solid rgba(255,255,255,0.04)',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            }}>
-              <span style={{ fontSize: '0.75rem', color: '#555' }}>
-                Drag to orbit. Scroll to zoom. This is what your data becomes.
-              </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--gold)', letterSpacing: '0.1em' }}>
-                3D GAUSSIAN SPLATTING
-              </span>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* Pipeline steps */}
-        <div className="grid-4" style={{
-          display: 'grid', gap: '1.5rem',
-        }}>
-          {[
-            { num: '01', title: '360 Capture', desc: 'Raw 8K spherical video from thousands of contributors worldwide.' },
-            { num: '02', title: 'AI Processing', desc: 'Depth estimation, semantic segmentation, and multi-view alignment.' },
-            { num: '03', title: 'Gaussian Splats', desc: 'Millions of 3D ellipsoids create photorealistic, navigable scenes.' },
-            { num: '04', title: 'Digital Twin', desc: 'A continuously updated, explorable mirror of the physical world.' },
-          ].map((step, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div className="glass-card" style={{ height: '100%' }}>
-                <span style={{
-                  fontFamily: 'var(--font-serif)', fontSize: '2.5rem', fontWeight: 600,
-                  color: 'rgba(196,162,101,0.15)',
-                }}>{step.num}</span>
-                <h3 style={{
-                  color: '#fff', fontSize: '1.1rem', fontWeight: 600,
-                  margin: '0.8rem 0 0.5rem', fontFamily: 'var(--font-sans)',
-                }}>{step.title}</h3>
-                <p style={{ color: '#777', fontSize: '0.88rem', lineHeight: 1.7 }}>{step.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── How It Works ──
-function HowItWorks() {
-  return (
-    <section id="how-it-works" style={{
-      padding: '8rem 0', position: 'relative',
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-    }}>
-      <div className="container">
-        <Reveal>
-          <p className="section-label">HOW IT WORKS</p>
-          <h2 className="section-title">The Uber model,<br />applied to spatial data</h2>
-          <p className="section-subtitle" style={{ marginBottom: '4rem' }}>
-            We give you a camera. You walk, bike, or drive. You get paid per kilometer.
-            We handle everything else.
-          </p>
-        </Reveal>
-
-        <div className="grid-3" style={{ display: 'grid', gap: '2rem' }}>
-          {[
-            {
-              icon: (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A265" strokeWidth="1.5" strokeLinecap="round">
-                  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
-                </svg>
-              ),
-              title: 'Get a Camera',
-              desc: 'We provide 360-degree cameras at cost price. Mount on your car dashboard, bike helmet, or backpack. No expensive equipment — just a small, weatherproof device.',
-            },
-            {
-              icon: (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A265" strokeWidth="1.5" strokeLinecap="round">
-                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-              ),
-              title: 'Capture the World',
-              desc: 'Walk, bike, or drive as you normally would. The camera captures continuously. Our app handles background uploading over WiFi — zero extra effort.',
-            },
-            {
-              icon: (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4A265" strokeWidth="1.5" strokeLinecap="round">
-                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
-                  <circle cx="12" cy="12" r="4"/>
-                </svg>
-              ),
-              title: 'Get Paid Per km',
-              desc: 'Every kilometer of new data captured earns you money. The more you move, the more you earn. Priority bonuses for unmapped areas and fresh recaptures.',
-            },
-          ].map((step, i) => (
-            <Reveal key={i} delay={i * 0.15}>
-              <div className="glass-card" style={{ height: '100%' }}>
-                <div style={{
-                  width: 56, height: 56, borderRadius: '50%',
-                  background: 'rgba(196,162,101,0.08)', border: '1px solid rgba(196,162,101,0.12)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  marginBottom: '1.5rem',
-                }}>
-                  {step.icon}
-                </div>
-                <h3 style={{
-                  color: '#fff', fontSize: '1.2rem', fontWeight: 600,
-                  marginBottom: '0.8rem', fontFamily: 'var(--font-sans)',
-                }}>{step.title}</h3>
-                <p style={{ color: '#777', fontSize: '0.9rem', lineHeight: 1.75 }}>{step.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Vision Section ──
-function VisionSection() {
-  return (
-    <section id="vision" style={{
-      padding: '10rem 0', position: 'relative', overflow: 'hidden',
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-    }}>
-      {/* Large ambient glow */}
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 800, height: 800, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(196,162,101,0.05) 0%, transparent 60%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-        <Reveal>
-          <p className="section-label">THE VISION</p>
-          <h2 style={{
-            fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-            fontWeight: 600, color: '#fff', lineHeight: 1.12, marginBottom: '2rem',
-          }}>
-            Whoever controls the world's<br />
-            spatial data layer, controls<br />
-            <span style={{
-              background: 'linear-gradient(135deg, #C4A265, #E8D5A8)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>the future.</span>
-          </h2>
-          <p style={{
-            fontSize: '1.1rem', color: '#666', maxWidth: 560, margin: '0 auto 4rem',
-            lineHeight: 1.8, fontStyle: 'italic',
-          }}>
-            Navigation. Commerce. Simulation. AI training.<br />
-            It all starts with a complete model of reality.
-          </p>
-        </Reveal>
-
-        <div className="grid-4" style={{
-          display: 'grid', gap: '2rem',
-          maxWidth: 900, margin: '0 auto',
-        }}>
-          {[
-            { title: 'Navigation', desc: 'Beyond flat maps — true 3D spatial wayfinding' },
-            { title: 'Commerce', desc: 'Spatial retail, location intelligence, AR advertising' },
-            { title: 'Simulation', desc: 'Autonomous vehicle & robotics training environments' },
-            { title: 'AI Infrastructure', desc: 'The world model that powers the next generation of AI' },
-          ].map((p, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: '50%', margin: '0 auto 1rem',
-                  background: 'rgba(196,162,101,0.06)', border: '1px solid rgba(196,162,101,0.1)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.2rem', color: 'var(--gold)',
-                }}>
-                  {['◎', '◈', '⬡', '◉'][i]}
-                </div>
-                <h3 style={{ color: '#fff', fontSize: '1rem', fontWeight: 600, marginBottom: '0.4rem' }}>
-                  {p.title}
-                </h3>
-                <p style={{ color: '#666', fontSize: '0.82rem', lineHeight: 1.6 }}>{p.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Competitive Edge ──
-function CompetitiveSection() {
-  const competitors = [
-    ['360 capture', 'Yes', 'No', 'No', 'Yes'],
-    ['3D Gaussian Splats', 'Yes', 'No', 'No', 'No'],
-    ['Pay per km', 'Yes', 'Tokens', 'No', 'No'],
-    ['Digital twin output', 'Yes', 'No', 'No', 'Limited'],
-    ['Pedestrian + vehicle', 'Yes', 'Vehicle only', 'Partial', 'Limited'],
-    ['Decentralized', 'Yes', 'Blockchain', 'Meta-owned', 'Google-owned'],
-  ];
-
-  return (
-    <section style={{
-      padding: '8rem 0',
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-    }}>
-      <div className="container">
-        <Reveal>
-          <p className="section-label">COMPETITIVE EDGE</p>
-          <h2 className="section-title">We operate where<br />no one else does</h2>
-          <p className="section-subtitle" style={{ marginBottom: '3rem' }}>
-            The intersection of crowdsourced 360 capture, Gaussian Splatting, and
-            a pay-per-km incentive model is unoccupied.
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <div className="table-scroll-wrapper" style={{
-            borderRadius: 16, overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-              <thead>
-                <tr>
-                  {['', 'DAITA', 'Hivemapper', 'Mapillary', 'Google SV'].map((h, i) => (
-                    <th key={i} style={{
-                      padding: '1rem 1.2rem', textAlign: i === 0 ? 'left' : 'center',
-                      fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.1em',
-                      color: i === 1 ? '#C4A265' : '#555',
-                      background: i === 1 ? 'rgba(196,162,101,0.06)' : 'var(--bg-card)',
-                      borderBottom: '1px solid rgba(255,255,255,0.06)',
-                    }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {competitors.map((row, ri) => (
-                  <tr key={ri}>
-                    {row.map((cell, ci) => (
-                      <td key={ci} style={{
-                        padding: '0.75rem 1.2rem',
-                        textAlign: ci === 0 ? 'left' : 'center',
-                        fontSize: '0.85rem',
-                        color: ci === 1 ? '#C4A265' : '#777',
-                        fontWeight: ci === 1 ? 600 : 400,
-                        background: ci === 1 ? 'rgba(196,162,101,0.03)' : 'transparent',
-                        borderBottom: ri < competitors.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none',
-                      }}>
-                        {ci === 1 && cell === 'Yes' ? '✓ Yes' : cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-// ── CTA / Contact ──
-function ContactSection() {
-  return (
-    <section id="contact" style={{
-      padding: '8rem 0', textAlign: 'center', position: 'relative',
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-    }}>
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-        width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(196,162,101,0.05) 0%, transparent 60%)',
-        pointerEvents: 'none',
-      }} />
-      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <Reveal>
-          <p className="section-label">JOIN THE NETWORK</p>
-          <h2 style={{
-            fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)',
-            fontWeight: 600, color: '#fff', marginBottom: '1rem',
-          }}>
-            See the world. Own the data.
-          </h2>
-          <p style={{
-            color: '#666', fontSize: '1rem', maxWidth: 500, margin: '0 auto 2.5rem',
-            lineHeight: 1.8,
-          }}>
-            Investor, collector, or enterprise customer — we'd love to hear from you.
-          </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="mailto:jasper@aerointel.eu" className="btn-primary">
-              GET IN TOUCH
-            </a>
-          </div>
-          <p style={{ color: 'var(--gold)', fontSize: '0.85rem', marginTop: '1.5rem', letterSpacing: '0.05em' }}>
-            jasper@aerointel.eu
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-// ── Footer ──
-function Footer() {
-  return (
-    <footer style={{
-      padding: '2rem 0', borderTop: '1px solid rgba(255,255,255,0.04)',
-      textAlign: 'center',
-    }}>
-      <div className="container footer-inner" style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        flexWrap: 'wrap', gap: '1rem',
-      }}>
-        <img src="/logo.svg" alt="DAITA" style={{ height: 24, opacity: 0.5 }} />
-        <p style={{ color: '#444', fontSize: '0.75rem', letterSpacing: '0.1em' }}>
-          DAITA &copy; 2026. THE DECENTRALIZED VISUAL DATA NETWORK.
-        </p>
-      </div>
-    </footer>
-  );
-}
-
-// ── Main Page ──
-export default function Home() {
   return (
     <>
-      <Nav />
-      <Hero />
-      <StatsBar />
-      <TechnologySection />
-      <HowItWorks />
-      <VisionSection />
-      <CompetitiveSection />
-      <ContactSection />
-      <Footer />
+      <div className="cursor" id="cursor" />
+
+      <nav className="nav" id="nav" ref={navRef}>
+        <div className="nav__brand">DAITA</div>
+        <div className="nav__links">
+          <a href="#manifesto">What</a>
+          <a href="#how">How</a>
+          <a href="#capabilities">Platform</a>
+          <a href="#uses">Use cases</a>
+          <a href="#contrib">Contribute</a>
+        </div>
+        <a className="nav__cta" href="#final"><span className="dot" />Get the data</a>
+      </nav>
+
+      <header className="hero" ref={heroRef}>
+        <video
+          className="hero__video"
+          src="/videos/hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+        <div className="hero__veil" />
+
+        <div className="hero__inner">
+          <div className="hero__meta">
+            <span>Network<strong>14,200+ contributors</strong></span>
+            <span>Coverage<strong>48 cities · 12 countries</strong></span>
+            <span>Dataset<strong>2.4M km captured</strong></span>
+            <span>Status <strong style={{ color: 'var(--teal-glow)' }}>◉ Live</strong></span>
+          </div>
+
+          <h1 className="hero__wordmark" id="hw" ref={wordmarkRef}>
+            <span>D</span><span>A</span><span>I</span><span>T</span><span>A</span>
+          </h1>
+
+          <div className="hero__bot">
+            <div className="hero__lede">
+              The <em>DoorDash</em> for 3D data — a decentralized network turning
+              everyday real-world movement into spatial data for AI, simulation,
+              robotics and digital twins.
+            </div>
+            <div className="hero__cta">
+              <a href="#manifesto">See how it works →</a>
+              <small>05 sections · live network</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="ticker">
+        <div className="ticker__track" id="ticker" />
+      </div>
+
+      <section className="manifesto" id="manifesto">
+        <div className="manifesto__kicker"><span>§ 01 — Manifesto</span></div>
+        <div className="manifesto__block">
+          <p>The world is <em className="w em">already</em> being walked,</p>
+          <p><span className="w">driven</span>, <span className="w">delivered</span> <span className="w">and</span> <span className="w">ridden</span> <span className="w">through</span></p>
+          <p><span className="w">every</span> <span className="w">single</span> <span className="w">day.</span></p>
+          <p><span className="w em">We turn</span> <span className="w em">that motion</span></p>
+          <p><span className="w">into</span> <span className="w">3D{'\u00A0'}data.</span></p>
+        </div>
+
+        <div className="manifesto__footnote">
+          <p>
+            Today, 3D world data is expensive, fragmented, and painfully slow to collect.
+            Most of it comes from centralized fleets, specialized hardware and
+            one-off scanning projects — which makes it hard to build datasets that are{' '}
+            <b>large-scale, frequently updated and globally distributed.</b>
+          </p>
+          <p>
+            DAITA flips the model. A distributed contributor network — couriers,
+            drivers, cyclists, commuters — equipped with the right camera setup
+            becomes the data-collection layer. We process their raw video into
+            structured 3D spatial assets: the <b>infrastructure layer for decentralized 3D data acquisition</b>, always up to date, global by design.
+          </p>
+        </div>
+      </section>
+
+      <section className="how" id="how">
+        <div className="how__head">
+          <div>
+            <small>§ 02 — How it works</small>
+            <h2>From motion to <em>mesh</em>,<br />in four steps.</h2>
+          </div>
+          <small>04 stages · end-to-end</small>
+        </div>
+        <div className="how__steps">
+          <div className="step reveal">
+            <div className="step__n">01 <em>Capture</em></div>
+            <div className="step__viz" data-viz="capture" />
+            <h3>Contributors record.</h3>
+            <p>Couriers, drivers and riders capture video as they move — no detour, no extra trip. A clip per block, a block at a time.</p>
+          </div>
+          <div className="step reveal">
+            <div className="step__n">02 <em>Upload</em></div>
+            <div className="step__viz" data-viz="upload" />
+            <h3>Raw video lands.</h3>
+            <p>Footage is auto-tagged with pose, time and route, then streamed into our ingestion pipeline. Redundant passes strengthen coverage.</p>
+          </div>
+          <div className="step reveal">
+            <div className="step__n">03 <em>Reconstruct</em></div>
+            <div className="step__viz" data-viz="mesh" />
+            <h3>We build 3D.</h3>
+            <p>Photogrammetry, neural reconstruction and semantic labelling turn the raw video into meshes, point clouds, and Gaussian splats.</p>
+          </div>
+          <div className="step reveal">
+            <div className="step__n">04 <em>Deliver</em></div>
+            <div className="step__viz" data-viz="serve" />
+            <h3>Customers consume.</h3>
+            <p>Structured spatial assets ship to AI teams, simulation studios, robotics platforms and digital-twin operators. Refreshed on cadence.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="caps" id="capabilities">
+        <div className="caps__head">
+          <div>
+            <small>§ 03 — What you get</small>
+            <h2>A living map of <em>the real world</em>.</h2>
+          </div>
+          <small>06 modules · 01 stack</small>
+        </div>
+
+        <div className="caps__grid">
+          <div className="card huge reveal">
+            <div className="card__idx">
+              <span>01 / NETWORK</span>
+              <span className="card__pill"><span className="dot" />Live</span>
+            </div>
+            <h3 className="card__title">A distributed capture network, not a fleet.</h3>
+            <p className="card__body">
+              Tens of thousands of everyday contributors — couriers, drivers, cyclists —
+              equipped with the right camera setup. Coverage grows with the cities
+              people already move through.
+            </p>
+            <div className="sensorviz" id="sensorviz" />
+          </div>
+
+          <div className="card tall reveal">
+            <div className="card__idx"><span>02 / SCALE</span></div>
+            <h3 className="card__title">Crowd-scale, not fleet-scale.</h3>
+            <p className="card__body">Every extra contributor is extra coverage. Growth compounds.</p>
+            <div className="card__fig">14.2<sup>k</sup></div>
+          </div>
+
+          <div className="card reveal">
+            <div className="card__idx"><span>03 / FRESHNESS</span></div>
+            <h3 className="card__title">Weekly refresh, not yearly.</h3>
+            <p className="card__body">Same streets, re-captured — your data ages in weeks, not years.</p>
+            <div className="card__fig">7<sup>days</sup></div>
+          </div>
+
+          <div className="card reveal">
+            <div className="card__idx"><span>04 / COST</span></div>
+            <h3 className="card__title">A fraction per{'\u00A0'}km².</h3>
+            <p className="card__body">No dedicated fleet, no one-off scans. Distributed cost curve.</p>
+            <div className="card__fig">1⁄10<sup>×</sup></div>
+          </div>
+
+          <div className="card wide reveal">
+            <div className="card__idx"><span>05 / OUTPUT</span></div>
+            <h3 className="card__title">Meshes, splats, labels &amp; point clouds.</h3>
+            <p className="card__body">
+              Photogrammetric meshes, Gaussian splats, labelled point clouds, vector layers
+              and pose-aligned video. Whatever format your pipeline expects.
+            </p>
+            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />API · SDK · Bulk</div>
+          </div>
+
+          <div className="card wide reveal">
+            <div className="card__idx"><span>06 / GLOBAL</span></div>
+            <h3 className="card__title">Global by{'\u00A0'}design.</h3>
+            <p className="card__body">
+              Launch a new city by onboarding its couriers, not by shipping a fleet.
+              The network is already there — we just switch on the capture.
+            </p>
+            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />48 cities live</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="showcase" id="showcase">
+        <div className="showcase__viz">
+          <div className="showcase__label tl">◉ Reconstruction · Rotterdam-04 · 12:07Z</div>
+          <div className="showcase__label br">MESH · v2.7.3</div>
+          <canvas id="showcaseCanvas" />
+        </div>
+        <div className="showcase__txt">
+          <small style={{ fontFamily: "'JetBrains Mono'", fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--teal)' }}>§ 04 — The platform</small>
+          <h3>One pipeline. <em>Every</em> 3D format.</h3>
+          <p>
+            DAITA&apos;s reconstruction engine ingests contributor video and produces
+            structured spatial assets — calibrated, semantically labelled, and
+            version-tracked. Your models and simulations pull fresh geometry
+            straight from the network.
+          </p>
+          <ul>
+            <li><b>01</b> <i>Photogrammetric mesh</i> <u>OBJ · GLB · USD</u></li>
+            <li><b>02</b> <i>Gaussian splats</i> <u>PLY · SPLAT</u></li>
+            <li><b>03</b> <i>Labelled point cloud</i> <u>LAS · E57</u></li>
+            <li><b>04</b> <i>Pose-aligned video</i> <u>MP4 + JSON</u></li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="uses" id="uses">
+        <div className="uses__head">
+          <div>
+            <small>§ 05 — Use cases</small>
+            <h2>Built for teams who need the <em>real world</em>, fast.</h2>
+          </div>
+          <small>06 verticals · and counting</small>
+        </div>
+        <div className="uses__grid">
+          <div className="use">
+            <div className="use__tag"><span>01 / AI</span><span>training</span></div>
+            <h3>Embodied &amp; vision AI.</h3>
+            <p>Train foundation models on geometry that actually matches the world people move through — not just static scan archives.</p>
+            <div className="use__examples"><span>VLA</span><span>NeRF</span><span>vision</span></div>
+          </div>
+          <div className="use">
+            <div className="use__tag"><span>02 / ROBOTICS</span><span>sim-to-real</span></div>
+            <h3>Sim-to-real robotics.</h3>
+            <p>High-fidelity replicas of real streets, warehouses and campuses for navigation, manipulation and safety testing.</p>
+            <div className="use__examples"><span>delivery bots</span><span>AMRs</span><span>humanoids</span></div>
+          </div>
+          <div className="use">
+            <div className="use__tag"><span>03 / MAPPING</span><span>HD</span></div>
+            <h3>HD mapping, kept current.</h3>
+            <p>Refresh HD maps in days, not quarters. Every new road sign, cone and construction zone flows in with the next capture pass.</p>
+            <div className="use__examples"><span>AV stack</span><span>ADAS</span><span>logistics</span></div>
+          </div>
+          <div className="use">
+            <div className="use__tag"><span>04 / SIMULATION</span><span>training</span></div>
+            <h3>Simulation &amp; virtual worlds.</h3>
+            <p>Drop real city blocks into your simulator. Stress-test autonomy, games, training environments on geometry that actually exists.</p>
+            <div className="use__examples"><span>AV sim</span><span>game worlds</span><span>training</span></div>
+          </div>
+          <div className="use">
+            <div className="use__tag"><span>05 / DEFENSE</span><span>situational</span></div>
+            <h3>Defense &amp; ISR.</h3>
+            <p>Current geometry of urban and infrastructure environments, on demand — for planning, mission rehearsal and digital twins.</p>
+            <div className="use__examples"><span>urban ops</span><span>planning</span><span>twins</span></div>
+          </div>
+          <div className="use">
+            <div className="use__tag"><span>06 / INFRA</span><span>twins</span></div>
+            <h3>Digital infrastructure twins.</h3>
+            <p>Ports, campuses, cities kept in-sync with their physical state. Measure change, not guess at it.</p>
+            <div className="use__examples"><span>ports</span><span>utilities</span><span>cities</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="stacker">
+        <div className="stacker__row">
+          <span>CAPTURE</span><span>PROCESS</span><span>DELIVER</span><em>·</em>
+          <span>CAPTURE</span><span>PROCESS</span><span>DELIVER</span><em>·</em>
+        </div>
+        <div className="stacker__row">
+          MESH <em>·</em> SPLAT <em>·</em> POINT{'\u00A0'}CLOUD <em>·</em>
+          MESH <em>·</em> SPLAT <em>·</em> POINT{'\u00A0'}CLOUD <em>·</em>
+        </div>
+      </section>
+
+      <section className="contrib" id="contrib">
+        <div className="contrib__l">
+          <small>§ 06 — Contribute</small>
+          <h3>If you <em>move</em>, you can map.</h3>
+          <p>
+            The network is open to anyone already out in the world. A courier
+            delivering lunches, a rider crossing town, a driver running a daily route —
+            with the right camera setup, every trip becomes coverage. We handle the
+            hardware, the processing and the payouts.
+          </p>
+          <a className="nav__cta" href="mailto:join@daita.eu" style={{ marginTop: 28 }}>
+            <span className="dot" />Join the network
+          </a>
+        </div>
+        <div className="contrib__r">
+          <div className="who">
+            <div className="who__num">01</div>
+            <h4>Couriers &amp; riders</h4>
+            <p>Food and parcel couriers on bikes, scooters and e-bikes. Dense urban coverage, every day.</p>
+          </div>
+          <div className="who">
+            <div className="who__num">02</div>
+            <h4>Rideshare &amp; taxi</h4>
+            <p>Drivers who already cover thousands of km a week across a city&apos;s full graph.</p>
+          </div>
+          <div className="who">
+            <div className="who__num">03</div>
+            <h4>Logistics &amp; fleet</h4>
+            <p>Delivery vans and regional fleets running repeatable routes across regions.</p>
+          </div>
+          <div className="who">
+            <div className="who__num">04</div>
+            <h4>Commuters &amp; cyclists</h4>
+            <p>Daily commuters on bikes and cars who can capture a familiar stretch without changing their day.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="final" id="final">
+        <h2>Real world,<br /><em>really</em> in 3D.</h2>
+        <div className="final__row">
+          <p>
+            Whether you need fresh geometry of a single city block or an always-on
+            pipeline across a continent — DAITA is the layer that turns motion into data.
+          </p>
+          <div className="final__cta">
+            <a className="big" href="mailto:hello@daita.eu">
+              hello@daita.eu
+              <span className="arrow">→</span>
+            </a>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <a className="ghost" href="#how">How it works</a>
+              <a className="ghost" href="#contrib">Become a contributor</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div className="foot">
+          <div className="foot__brand">DA<em>IT</em>A</div>
+          <div className="foot__col">
+            <h4>Platform</h4>
+            <a href="#capabilities">Network</a>
+            <a href="#capabilities">Reconstruction</a>
+            <a href="#showcase">Formats</a>
+            <a href="#how">Pipeline</a>
+          </div>
+          <div className="foot__col">
+            <h4>Company</h4>
+            <a href="#">Team</a>
+            <a href="#">Press</a>
+            <a href="#">Careers</a>
+          </div>
+          <div className="foot__col">
+            <h4>Contact</h4>
+            <a href="mailto:hello@daita.eu">hello@daita.eu</a>
+            <a href="mailto:join@daita.eu">join@daita.eu</a>
+            <a href="#">Partner with us →</a>
+          </div>
+        </div>
+        <div className="foot__bot">
+          <span>© 2026 DAITA Labs</span>
+          <span>The DoorDash for 3D data</span>
+        </div>
+      </footer>
     </>
   );
 }
