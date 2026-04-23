@@ -586,50 +586,76 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   text-transform: uppercase; color: rgba(243,238,222,0.4);
 }
 
-/* Stats band (after ticker) */
-.stats {
-  background: var(--ink);
-  color: var(--cream);
-  padding: 56px 56px 64px;
-  border-bottom: 1px solid rgba(47,216,216,0.2);
+/* Walking mascot — replaces the stats band.
+   The section is taller than the viewport; its inner box is sticky,
+   and the mascot's translateX is driven by scroll progress via --walk. */
+.walk {
+  background: var(--cream);
+  position: relative;
+  height: 220vh;
+  border-bottom: 1px solid var(--cream-hair);
 }
-.stats__kicker {
-  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.26em;
-  text-transform: uppercase; color: var(--teal-glow);
-  display: flex; align-items: center; gap: 14px;
-  margin: 0 auto 34px; max-width: 1400px;
+.walk__inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
 }
-.stats__kicker::before { content: ''; width: 48px; height: 1px; background: currentColor; }
-.stats__row {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  max-width: 1400px; margin: 0 auto;
+.walk__horizon {
+  position: absolute; left: 0; right: 0; bottom: 18%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cream-hair) 15%, var(--cream-hair) 85%, transparent);
 }
-.stat {
-  display: flex; flex-direction: column; gap: 8px;
-  padding-left: 20px;
-  border-left: 1px solid rgba(47,216,216,0.25);
+.walk__man {
+  --walk: -15vw;
+  height: 72vh;
+  transform: translate3d(var(--walk), 0, 0);
+  will-change: transform;
+  margin-bottom: 8vh;
+  filter: drop-shadow(0 24px 24px rgba(12,31,34,0.18));
+  user-select: none;
+  pointer-events: none;
 }
-.stat__n {
-  font-family: 'Archivo Black';
-  font-size: clamp(40px, 4.2vw, 64px);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--cream);
+.walk__caption {
+  position: absolute;
+  top: 10vh; left: 56px;
+  max-width: 26ch;
+  z-index: 2;
 }
-.stat__n em {
-  font-style: italic; font-family: 'Instrument Serif';
-  font-weight: 400; color: var(--teal-glow); padding: 0 0.04em;
-}
-.stat__n sup {
-  font-family: 'JetBrains Mono';
-  font-size: 0.35em; color: var(--teal-glow);
-  vertical-align: 1.6em; margin-left: 6px; letter-spacing: 0.08em;
-}
-.stat__label {
+.walk__caption small {
   font-family: 'JetBrains Mono'; font-size: 11px;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: rgba(243,238,222,0.6);
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--teal);
+  display: flex; align-items: center; gap: 14px;
+}
+.walk__caption small::before { content: ''; width: 48px; height: 1px; background: currentColor; }
+.walk__caption h2 {
+  font-family: 'Archivo Black';
+  font-size: clamp(40px, 5vw, 80px);
+  line-height: 0.96; letter-spacing: -0.035em;
+  margin: 18px 0 0;
+}
+.walk__caption h2 em {
+  font-style: italic; font-family: 'Instrument Serif';
+  color: var(--teal); font-weight: 400; padding: 0 0.05em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .walk__man { animation: none !important; }
+}
+@media (max-width: 1020px) {
+  .walk { height: 140vh; }
+  .walk__caption { left: 24px; top: 8vh; }
+  .walk__man {
+    height: 62vh;
+    animation: walkOnMobile 14s linear infinite;
+  }
+  @keyframes walkOnMobile {
+    from { transform: translate3d(-30vw, 0, 0); }
+    to   { transform: translate3d(120vw, 0, 0); }
+  }
 }
 
 /* Partners / built-for strip */

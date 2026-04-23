@@ -114,6 +114,34 @@ export default function Page() {
     return () => io.disconnect();
   }, []);
 
+  // Scroll-linked walk animation (desktop only; mobile uses CSS keyframes)
+  useEffect(() => {
+    if (window.matchMedia('(max-width: 1020px)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const section = document.getElementById('walk');
+    const man = section?.querySelector('.walk__man');
+    if (!section || !man) return;
+    let raf = 0;
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const travel = rect.height - vh;
+      const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
+      const tx = -15 + p * 130; // -15vw (off-left) to 115vw (off-right)
+      man.style.setProperty('--walk', tx.toFixed(2) + 'vw');
+      raf = 0;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   useEffect(() => {
     document.querySelectorAll('[data-viz]').forEach((el, i) => {
       const kind = el.dataset.viz;
@@ -363,25 +391,18 @@ export default function Page() {
         <div className="ticker__track" id="ticker" />
       </div>
 
-      <section className="stats">
-        <div className="stats__kicker"><span>Beta specs · what ships today</span></div>
-        <div className="stats__row">
-          <div className="stat">
-            <div className="stat__n">±1<sup>CM</sup></div>
-            <div className="stat__label">Pose accuracy</div>
+      <section className="walk" id="walk">
+        <div className="walk__inner">
+          <div className="walk__caption">
+            <small><span>The network, walking</span></small>
+            <h2>Every <em>mover</em> a mapper.</h2>
           </div>
-          <div className="stat">
-            <div className="stat__n">7<sup>DAYS</sup></div>
-            <div className="stat__label">Refresh cadence</div>
-          </div>
-          <div className="stat">
-            <div className="stat__n">4<em>×</em></div>
-            <div className="stat__label">Output formats shipped</div>
-          </div>
-          <div className="stat">
-            <div className="stat__n">100<sup>%</sup></div>
-            <div className="stat__label">Rights-cleared</div>
-          </div>
+          <div className="walk__horizon" />
+          <img
+            className="walk__man"
+            src="/images/mascot.webp"
+            alt="A DAITA contributor in teal suit walking with a 360° camera"
+          />
         </div>
       </section>
 
