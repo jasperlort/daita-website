@@ -22,7 +22,7 @@ import * as THREE from 'three';
  * when no real .splat file is available.
  */
 
-const USE_REAL_SPLAT = false; // Set to true when you add a real .splat file
+const USE_REAL_SPLAT = true;
 const SPLAT_PATH = '/splats/scene.splat';
 
 // ââ Procedural Gaussian Splat Scene (placeholder) ââ

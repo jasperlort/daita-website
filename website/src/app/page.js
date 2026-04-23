@@ -1,6 +1,12 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
+
+const SplatViewer = dynamic(() => import('../components/SplatViewer'), {
+  ssr: false,
+  loading: () => null,
+});
 
 const TICKER_ITEMS = [
   '<span>A <b>DePIN</b> for reality</span>',
@@ -496,8 +502,8 @@ export default function Page() {
       <section className="showcase" id="showcase">
         <div className="showcase__viz">
           <div className="showcase__label tl">◉ Reconstruction · Rotterdam-04 · 12:07Z</div>
-          <div className="showcase__label br">MESH · v2.7.3</div>
-          <canvas id="showcaseCanvas" />
+          <div className="showcase__label br">SPLAT · v2.7.3</div>
+          <div className="showcase__splat"><SplatViewer /></div>
         </div>
         <div className="showcase__txt">
           <small style={{ fontFamily: "'JetBrains Mono'", fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--teal)' }}>§ 04 — The platform</small>
