@@ -364,6 +364,7 @@ export default function Page() {
       </div>
 
       <section className="stats">
+        <div className="stats__kicker"><span>Beta specs · what ships today</span></div>
         <div className="stats__row">
           <div className="stat">
             <div className="stat__n">±1<sup>CM</sup></div>
@@ -759,7 +760,7 @@ export default function Page() {
           </div>
         </div>
         <div className="foot__bot">
-          <span>© 2026 DAITA Labs</span>
+          <span>© 2026 DAITA Labs · Private beta</span>
           <span>The DoorDash for 3D data</span>
         </div>
       </footer>
