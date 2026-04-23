@@ -615,7 +615,6 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   transform: translate3d(var(--walk), 0, 0);
   will-change: transform;
   margin-bottom: 8vh;
-  filter: drop-shadow(0 24px 24px rgba(12,31,34,0.18));
   user-select: none;
   pointer-events: none;
 }
