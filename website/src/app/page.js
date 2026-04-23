@@ -3,14 +3,16 @@
 import { useEffect, useRef } from 'react';
 
 const TICKER_ITEMS = [
-  '<span>3D <b>reconstruction</b></span>',
+  '<span>A <b>DePIN</b> for reality</span>',
   '<span>Gaussian <b>splats</b></span>',
-  '<span>Decentralized <b>capture</b></span>',
+  '<span>Large <b>Geospatial</b> Models</span>',
+  '<span>Visual <b>Positioning</b> · VPS</span>',
+  '<span><b>Physical AI</b> training data</span>',
+  '<span>Centimeter <b>pose</b></span>',
   '<span>Photogrammetric <b>mesh</b></span>',
   '<span><b>Digital</b> twins</span>',
-  '<span><b>Sim</b>-to-real</span>',
+  '<span><b>Sim</b>-to-real robotics</span>',
   '<span>Pose-aligned <b>video</b></span>',
-  '<span>Crowd-scale <b>coverage</b></span>',
   '<span>Fresh <b>every week</b></span>',
   '<span>Global by <b>design</b></span>',
 ];
@@ -366,16 +368,21 @@ export default function Page() {
 
         <div className="manifesto__footnote">
           <p>
-            Today, 3D world data is expensive, fragmented, and painfully slow to collect.
-            Most of it comes from centralized fleets, specialized hardware and
-            one-off scanning projects — which makes it hard to build datasets that are{' '}
-            <b>large-scale, frequently updated and globally distributed.</b>
+            Physical AI needs real-world 3D — constantly refreshed, globally
+            diverse, rights-clean. Today it comes from centralized fleets,
+            one-off lidar scans and bespoke licensing deals. That stack
+            doesn&apos;t scale to the geography the next generation of{' '}
+            <b>Large Geospatial Models, robotics and digital twins</b> is
+            asking for.
           </p>
           <p>
-            DAITA flips the model. A distributed contributor network — couriers,
-            drivers, cyclists, commuters — equipped with the right camera setup
-            becomes the data-collection layer. We process their raw video into
-            structured 3D spatial assets: the <b>infrastructure layer for decentralized 3D data acquisition</b>, always up to date, global by design.
+            DAITA is a <b>DePIN for reality</b>. A distributed network of
+            couriers, drivers and cyclists — running the right capture rig —
+            becomes the collection layer. We reconstruct their video into
+            meshes, Gaussian splats, labelled point clouds and pose-aligned
+            sequences, and serve them as training data, HD maps and a{' '}
+            <b>visual positioning system</b>. Infrastructure for real-world
+            3D: always up to date, global by design.
           </p>
         </div>
       </section>
@@ -392,26 +399,26 @@ export default function Page() {
           <div className="step reveal">
             <div className="step__n">01 <em>Capture</em></div>
             <div className="step__viz" data-viz="capture" />
-            <h3>Contributors record.</h3>
-            <p>Couriers, drivers and riders capture video as they move — no detour, no extra trip. A clip per block, a block at a time.</p>
+            <h3>Every trip is a capture.</h3>
+            <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
           </div>
           <div className="step reveal">
-            <div className="step__n">02 <em>Upload</em></div>
+            <div className="step__n">02 <em>Upload &amp; earn</em></div>
             <div className="step__viz" data-viz="upload" />
-            <h3>Raw video lands.</h3>
-            <p>Footage is auto-tagged with pose, time and route, then streamed into our ingestion pipeline. Redundant passes strengthen coverage.</p>
+            <h3>Footage lands, contributors earn.</h3>
+            <p>Video streams in pose- and route-tagged; the network pays on every verified kilometre. Redundant passes strengthen coverage.</p>
           </div>
           <div className="step reveal">
             <div className="step__n">03 <em>Reconstruct</em></div>
             <div className="step__viz" data-viz="mesh" />
-            <h3>We build 3D.</h3>
-            <p>Photogrammetry, neural reconstruction and semantic labelling turn the raw video into meshes, point clouds, and Gaussian splats.</p>
+            <h3>Raw video becomes 3D.</h3>
+            <p>Structure-from-motion, 3D Gaussian Splatting and semantic labelling turn video into meshes, splats, labelled point clouds and precise camera poses.</p>
           </div>
           <div className="step reveal">
             <div className="step__n">04 <em>Deliver</em></div>
             <div className="step__viz" data-viz="serve" />
-            <h3>Customers consume.</h3>
-            <p>Structured spatial assets ship to AI teams, simulation studios, robotics platforms and digital-twin operators. Refreshed on cadence.</p>
+            <h3>Customers pull by API.</h3>
+            <p>Geospatial AI teams, robotics and AV platforms, simulation studios and digital-twin operators pull fresh geometry, HD maps and VPS anchors on demand.</p>
           </div>
         </div>
       </section>
@@ -431,11 +438,12 @@ export default function Page() {
               <span>01 / NETWORK</span>
               <span className="card__pill"><span className="dot" />Live</span>
             </div>
-            <h3 className="card__title">A distributed capture network, not a fleet.</h3>
+            <h3 className="card__title">A DePIN for real-world 3D.</h3>
             <p className="card__body">
-              Tens of thousands of everyday contributors — couriers, drivers, cyclists —
-              equipped with the right camera setup. Coverage grows with the cities
-              people already move through.
+              A decentralized physical infrastructure network: tens of thousands of
+              everyday contributors running the right capture rig. Coverage grows
+              with the cities people already move through, not with the fleet we
+              can afford.
             </p>
             <div className="sensorviz" id="sensorviz" />
           </div>
@@ -443,7 +451,7 @@ export default function Page() {
           <div className="card tall reveal">
             <div className="card__idx"><span>02 / SCALE</span></div>
             <h3 className="card__title">Crowd-scale, not fleet-scale.</h3>
-            <p className="card__body">Every extra contributor is extra coverage. Growth compounds.</p>
+            <p className="card__body">Every extra contributor is extra coverage. Growth compounds; reality refreshes.</p>
             <div className="card__fig">14.2<sup>k</sup></div>
           </div>
 
@@ -455,18 +463,19 @@ export default function Page() {
           </div>
 
           <div className="card reveal">
-            <div className="card__idx"><span>04 / COST</span></div>
-            <h3 className="card__title">A fraction per{'\u00A0'}km².</h3>
-            <p className="card__body">No dedicated fleet, no one-off scans. Distributed cost curve.</p>
-            <div className="card__fig">1⁄10<sup>×</sup></div>
+            <div className="card__idx"><span>04 / PRECISION</span></div>
+            <h3 className="card__title">Centimeter-scale pose.</h3>
+            <p className="card__body">Every clip ships with a precise camera pose. Powers visual positioning, AR anchoring and robotics localization.</p>
+            <div className="card__fig">±1<sup>cm</sup></div>
           </div>
 
           <div className="card wide reveal">
             <div className="card__idx"><span>05 / OUTPUT</span></div>
-            <h3 className="card__title">Meshes, splats, labels &amp; point clouds.</h3>
+            <h3 className="card__title">Meshes, splats, pose &amp; VPS anchors.</h3>
             <p className="card__body">
-              Photogrammetric meshes, Gaussian splats, labelled point clouds, vector layers
-              and pose-aligned video. Whatever format your pipeline expects.
+              Photogrammetric meshes, Gaussian splats, labelled point clouds, VPS
+              anchors and pose-aligned video. Whatever format your pipeline expects —
+              pulled by API, SDK or bulk.
             </p>
             <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />API · SDK · Bulk</div>
           </div>
@@ -476,7 +485,8 @@ export default function Page() {
             <h3 className="card__title">Global by{'\u00A0'}design.</h3>
             <p className="card__body">
               Launch a new city by onboarding its couriers, not by shipping a fleet.
-              The network is already there — we just switch on the capture.
+              The network is already there — at a fraction of the per-km² cost of a
+              bespoke scan.
             </p>
             <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />48 cities live</div>
           </div>
@@ -491,18 +501,18 @@ export default function Page() {
         </div>
         <div className="showcase__txt">
           <small style={{ fontFamily: "'JetBrains Mono'", fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--teal)' }}>§ 04 — The platform</small>
-          <h3>One pipeline. <em>Every</em> 3D format.</h3>
+          <h3>One capture. <em>Every</em> reality format.</h3>
           <p>
-            DAITA&apos;s reconstruction engine ingests contributor video and produces
-            structured spatial assets — calibrated, semantically labelled, and
-            version-tracked. Your models and simulations pull fresh geometry
-            straight from the network.
+            DAITA&apos;s reconstruction engine ingests contributor video and outputs
+            a calibrated, semantically labelled, version-tracked 3D scene. Pull the
+            format your pipeline expects — training data, HD maps, VPS anchors — by
+            API.
           </p>
           <ul>
             <li><b>01</b> <i>Photogrammetric mesh</i> <u>OBJ · GLB · USD</u></li>
             <li><b>02</b> <i>Gaussian splats</i> <u>PLY · SPLAT</u></li>
             <li><b>03</b> <i>Labelled point cloud</i> <u>LAS · E57</u></li>
-            <li><b>04</b> <i>Pose-aligned video</i> <u>MP4 + JSON</u></li>
+            <li><b>04</b> <i>VPS anchors &amp; pose</i> <u>JSON · protobuf</u></li>
           </ul>
         </div>
       </section>
@@ -517,15 +527,15 @@ export default function Page() {
         </div>
         <div className="uses__grid">
           <div className="use">
-            <div className="use__tag"><span>01 / AI</span><span>training</span></div>
-            <h3>Embodied &amp; vision AI.</h3>
-            <p>Train foundation models on geometry that actually matches the world people move through — not just static scan archives.</p>
-            <div className="use__examples"><span>VLA</span><span>NeRF</span><span>vision</span></div>
+            <div className="use__tag"><span>01 / FOUNDATION</span><span>LGMs</span></div>
+            <h3>Large Geospatial Models.</h3>
+            <p>Train foundation models on geometry that actually matches the world people move through — constantly refreshed, geographically diverse, rights-clean.</p>
+            <div className="use__examples"><span>LGM</span><span>WFM</span><span>VLA</span></div>
           </div>
           <div className="use">
-            <div className="use__tag"><span>02 / ROBOTICS</span><span>sim-to-real</span></div>
-            <h3>Sim-to-real robotics.</h3>
-            <p>High-fidelity replicas of real streets, warehouses and campuses for navigation, manipulation and safety testing.</p>
+            <div className="use__tag"><span>02 / ROBOTICS</span><span>nav + VPS</span></div>
+            <h3>Robotics &amp; VPS.</h3>
+            <p>Replicas of real streets, warehouses and campuses plus centimeter-precise visual positioning — navigation that works indoor, outdoor and GPS-denied.</p>
             <div className="use__examples"><span>delivery bots</span><span>AMRs</span><span>humanoids</span></div>
           </div>
           <div className="use">
@@ -535,34 +545,34 @@ export default function Page() {
             <div className="use__examples"><span>AV stack</span><span>ADAS</span><span>logistics</span></div>
           </div>
           <div className="use">
-            <div className="use__tag"><span>04 / SIMULATION</span><span>training</span></div>
+            <div className="use__tag"><span>04 / SIMULATION</span><span>WFMs</span></div>
             <h3>Simulation &amp; virtual worlds.</h3>
-            <p>Drop real city blocks into your simulator. Stress-test autonomy, games, training environments on geometry that actually exists.</p>
-            <div className="use__examples"><span>AV sim</span><span>game worlds</span><span>training</span></div>
+            <p>Drop real city blocks into any simulator. Train World Foundation Models, stress-test autonomy, prototype games on geometry that exists.</p>
+            <div className="use__examples"><span>AV sim</span><span>Cosmos / WFM</span><span>game worlds</span></div>
           </div>
           <div className="use">
-            <div className="use__tag"><span>05 / DEFENSE</span><span>situational</span></div>
-            <h3>Defense &amp; ISR.</h3>
-            <p>Current geometry of urban and infrastructure environments, on demand — for planning, mission rehearsal and digital twins.</p>
-            <div className="use__examples"><span>urban ops</span><span>planning</span><span>twins</span></div>
+            <div className="use__tag"><span>05 / AR + XR</span><span>anchored</span></div>
+            <h3>AR &amp; XR content.</h3>
+            <p>Real-world 3D as ground truth for immersive experiences. Anchor XR content against a centimeter-aligned map of where users actually walk.</p>
+            <div className="use__examples"><span>location AR</span><span>XR retail</span><span>spatial games</span></div>
           </div>
           <div className="use">
-            <div className="use__tag"><span>06 / INFRA</span><span>twins</span></div>
-            <h3>Digital infrastructure twins.</h3>
-            <p>Ports, campuses, cities kept in-sync with their physical state. Measure change, not guess at it.</p>
-            <div className="use__examples"><span>ports</span><span>utilities</span><span>cities</span></div>
+            <div className="use__tag"><span>06 / INFRA + ISR</span><span>twins</span></div>
+            <h3>Digital twins &amp; ISR.</h3>
+            <p>Ports, campuses, cities and contested urban environments, kept in-sync with their physical state. Measure change, don&apos;t guess at it.</p>
+            <div className="use__examples"><span>ports</span><span>utilities</span><span>defense ops</span></div>
           </div>
         </div>
       </section>
 
       <section className="stacker">
         <div className="stacker__row">
-          <span>CAPTURE</span><span>PROCESS</span><span>DELIVER</span><em>·</em>
-          <span>CAPTURE</span><span>PROCESS</span><span>DELIVER</span><em>·</em>
+          <span>CAPTURE</span><span>REFRESH</span><span>DELIVER</span><em>·</em>
+          <span>CAPTURE</span><span>REFRESH</span><span>DELIVER</span><em>·</em>
         </div>
         <div className="stacker__row">
-          MESH <em>·</em> SPLAT <em>·</em> POINT{'\u00A0'}CLOUD <em>·</em>
-          MESH <em>·</em> SPLAT <em>·</em> POINT{'\u00A0'}CLOUD <em>·</em>
+          MESH <em>·</em> SPLAT <em>·</em> POSE <em>·</em> VPS <em>·</em>
+          MESH <em>·</em> SPLAT <em>·</em> POSE <em>·</em> VPS <em>·</em>
         </div>
       </section>
 
@@ -572,9 +582,10 @@ export default function Page() {
           <h3>If you <em>move</em>, you can map.</h3>
           <p>
             The network is open to anyone already out in the world. A courier
-            delivering lunches, a rider crossing town, a driver running a daily route —
-            with the right camera setup, every trip becomes coverage. We handle the
-            hardware, the processing and the payouts.
+            delivering lunches, a rider crossing town, a driver running a daily
+            route — with the right capture rig, every trip becomes coverage. We
+            ship the hardware, handle the processing, and pay out on every
+            verified kilometre captured.
           </p>
           <a className="nav__cta" href="mailto:join@daita.eu" style={{ marginTop: 28 }}>
             <span className="dot" />Join the network
