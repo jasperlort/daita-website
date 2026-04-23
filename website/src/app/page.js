@@ -317,7 +317,7 @@ export default function Page() {
           <a href="#uses">Use cases</a>
           <a href="#contrib">Contribute</a>
         </div>
-        <a className="nav__cta" href="#final"><span className="dot" />Get the data</a>
+        <a className="nav__cta" href="#final"><span className="dot" />Join the beta</a>
       </nav>
 
       <header className="hero" ref={heroRef}>
@@ -337,7 +337,7 @@ export default function Page() {
             <span>Network<strong>14,200+ contributors</strong></span>
             <span>Coverage<strong>48 cities · 12 countries</strong></span>
             <span>Dataset<strong>2.4M km captured</strong></span>
-            <span>Status <strong style={{ color: 'var(--teal-glow)' }}>◉ Live</strong></span>
+            <span>Status <strong style={{ color: 'var(--teal-glow)' }}>◉ In Beta</strong></span>
           </div>
 
           <h1 className="hero__wordmark" id="hw" ref={wordmarkRef}>
@@ -404,7 +404,7 @@ export default function Page() {
         <div className="how__steps">
           <div className="step reveal">
             <div className="step__n">01 <em>Capture</em></div>
-            <div className="step__viz" data-viz="capture" />
+            <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/capture.webp)' }} />
             <h3>Every trip is a capture.</h3>
             <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
           </div>
@@ -501,8 +501,8 @@ export default function Page() {
 
       <section className="showcase" id="showcase">
         <div className="showcase__viz">
-          <div className="showcase__label tl">◉ Reconstruction · Rotterdam-04 · 12:07Z</div>
-          <div className="showcase__label br">SPLAT · v2.7.3</div>
+          <div className="showcase__label tl">◉ Contributor scan · pilot capture</div>
+          <div className="showcase__label br">SPLAT · drag to orbit</div>
           <div className="showcase__splat"><SplatViewer /></div>
         </div>
         <div className="showcase__txt">

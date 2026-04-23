@@ -227,9 +227,9 @@ async function RealSplatScene({ container }) {
   const GaussianSplats3D = (await import('@mkkellogg/gaussian-splats-3d')).default;
 
   const viewer = new GaussianSplats3D.Viewer({
-    cameraUp: [0, 1, 0],
-    initialCameraPosition: [5, 3, 8],
-    initialCameraLookAt: [0, 1, 0],
+    cameraUp: [0, -1, 0],
+    initialCameraPosition: [6, -4, -22],
+    initialCameraLookAt: [0, 0, 6],
     rootElement: container,
     selfDrivenMode: true,
     sharedMemoryForWorkers: false,
