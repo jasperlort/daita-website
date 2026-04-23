@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 const SplatViewer = dynamic(() => import('../components/SplatViewer'), {
@@ -27,6 +27,13 @@ export default function Page() {
   const heroRef = useRef(null);
   const navRef = useRef(null);
   const wordmarkRef = useRef(null);
+  const [navOpen, setNavOpen] = useState(false);
+  const closeNav = () => setNavOpen(false);
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-open', navOpen);
+    return () => document.body.classList.remove('nav-open');
+  }, [navOpen]);
 
   useEffect(() => {
     if (window.matchMedia('(hover: none)').matches) return;
@@ -346,8 +353,26 @@ export default function Page() {
           <a href="#faq">FAQ</a>
           <a href="#contrib">Contribute</a>
         </div>
-        <a className="nav__cta" href="#final"><span className="dot" />Join the beta</a>
+        <button
+          className={`nav__burger${navOpen ? ' is-open' : ''}`}
+          aria-label={navOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={navOpen}
+          onClick={() => setNavOpen((v) => !v)}
+        >
+          <span /><span /><span />
+        </button>
+        <a className="nav__cta" href="#final" onClick={closeNav}><span className="dot" />Join the beta</a>
       </nav>
+
+      <div className={`nav__mobile${navOpen ? ' is-open' : ''}`} onClick={closeNav}>
+        <a href="#manifesto">What</a>
+        <a href="#how">How</a>
+        <a href="#capabilities">Platform</a>
+        <a href="#uses">Use cases</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contrib">Contribute</a>
+        <a href="#final" className="nav__mobile-cta">Join the beta →</a>
+      </div>
 
       <header className="hero" ref={heroRef}>
         <video
