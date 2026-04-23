@@ -421,10 +421,15 @@ export default function Page() {
             <h2>Every <em>mover</em> a mapper.</h2>
           </div>
           <div className="walk__horizon" />
-          <img
+          <video
             className="walk__man"
-            src="/images/mascot.webp"
-            alt="A DAITA contributor in teal suit walking with a 360° camera"
+            src="/videos/mascot-walk.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            aria-label="A DAITA contributor in teal suit walking with a 360° camera"
           />
         </div>
       </section>
