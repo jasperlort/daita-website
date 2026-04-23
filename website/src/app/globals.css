@@ -647,7 +647,7 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
 .walk {
   background: var(--cream);
   position: relative;
-  height: 130vh;
+  height: 108vh;
   border-bottom: 1px solid var(--cream-hair);
 }
 .walk__inner {
@@ -658,11 +658,12 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  padding-block: 6px;
 }
 .walk__horizon { display: none; }
 .walk__man {
   aspect-ratio: 3 / 4;
-  height: 52vh;
+  height: calc(100vh - 12px);
   background-image: url(/images/walk-sprite.webp);
   background-repeat: no-repeat;
   background-size: 1000% 600%;   /* 10 cols × 6 rows */
@@ -716,11 +717,11 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   .walk__man { animation: none !important; }
 }
 @media (max-width: 1020px) {
-  .walk { height: 110vh; }
+  .walk { height: 105vh; }
   .walk__caption { left: 24px; }
   .walk__man {
-    height: 42vh;
-    animation: walkOnMobile 14s linear infinite;
+    height: calc(100vh - 12px);
+    animation: none;
   }
   @keyframes walkOnMobile {
     from { transform: translate3d(-30vw, 0, 0); }
