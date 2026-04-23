@@ -363,7 +363,6 @@ export default function Page() {
       </div>
 
       <section className="manifesto" id="manifesto">
-        <div className="manifesto__kicker"><span>§ 01 — Manifesto</span></div>
         <div className="manifesto__block">
           <p>The world is <em className="w em">already</em> being walked,</p>
           <p><span className="w">driven</span>, <span className="w">delivered</span> <span className="w">and</span> <span className="w">ridden</span> <span className="w">through</span></p>
@@ -396,7 +395,6 @@ export default function Page() {
       <section className="how" id="how">
         <div className="how__head">
           <div>
-            <small>§ 02 — How it works</small>
             <h2>From motion to <em>mesh</em>,<br />in four steps.</h2>
           </div>
           <small>04 stages · end-to-end</small>
@@ -405,26 +403,34 @@ export default function Page() {
           <div className="step reveal">
             <div className="step__n">01 <em>Capture</em></div>
             <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/capture.webp)' }} />
-            <h3>Every trip is a capture.</h3>
-            <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
+            <div className="step__body">
+              <h3>Every trip is a capture.</h3>
+              <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
+            </div>
           </div>
           <div className="step reveal">
             <div className="step__n">02 <em>Upload &amp; earn</em></div>
             <div className="step__viz" data-viz="upload" />
-            <h3>Footage lands, contributors earn.</h3>
-            <p>Video streams in pose- and route-tagged; the network pays on every verified kilometre. Redundant passes strengthen coverage.</p>
+            <div className="step__body">
+              <h3>Footage lands, contributors earn.</h3>
+              <p>Video streams in pose- and route-tagged; the network pays on every verified kilometre. Redundant passes strengthen coverage.</p>
+            </div>
           </div>
           <div className="step reveal">
             <div className="step__n">03 <em>Reconstruct</em></div>
             <div className="step__viz" data-viz="mesh" />
-            <h3>Raw video becomes 3D.</h3>
-            <p>Structure-from-motion, 3D Gaussian Splatting and semantic labelling turn video into meshes, splats, labelled point clouds and precise camera poses.</p>
+            <div className="step__body">
+              <h3>Raw video becomes 3D.</h3>
+              <p>Structure-from-motion, 3D Gaussian Splatting and semantic labelling turn video into meshes, splats, labelled point clouds and precise camera poses.</p>
+            </div>
           </div>
           <div className="step reveal">
             <div className="step__n">04 <em>Deliver</em></div>
             <div className="step__viz" data-viz="serve" />
-            <h3>Customers pull by API.</h3>
-            <p>Geospatial AI teams, robotics and AV platforms, simulation studios and digital-twin operators pull fresh geometry, HD maps and VPS anchors on demand.</p>
+            <div className="step__body">
+              <h3>Customers pull by API.</h3>
+              <p>Geospatial AI teams, robotics and AV platforms, simulation studios and digital-twin operators pull fresh geometry, HD maps and VPS anchors on demand.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -432,7 +438,6 @@ export default function Page() {
       <section className="caps" id="capabilities">
         <div className="caps__head">
           <div>
-            <small>§ 03 — What you get</small>
             <h2>A living map of <em>the real world</em>.</h2>
           </div>
           <small>06 modules · 01 stack</small>
@@ -506,7 +511,6 @@ export default function Page() {
           <div className="showcase__splat"><SplatViewer /></div>
         </div>
         <div className="showcase__txt">
-          <small style={{ fontFamily: "'JetBrains Mono'", fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--teal)' }}>§ 04 — The platform</small>
           <h3>One capture. <em>Every</em> reality format.</h3>
           <p>
             DAITA&apos;s reconstruction engine ingests contributor video and outputs
@@ -526,7 +530,6 @@ export default function Page() {
       <section className="uses" id="uses">
         <div className="uses__head">
           <div>
-            <small>§ 05 — Use cases</small>
             <h2>Built for teams who need the <em>real world</em>, fast.</h2>
           </div>
           <small>06 verticals · and counting</small>
@@ -584,7 +587,6 @@ export default function Page() {
 
       <section className="contrib" id="contrib">
         <div className="contrib__l">
-          <small>§ 06 — Contribute</small>
           <h3>If you <em>move</em>, you can map.</h3>
           <p>
             The network is open to anyone already out in the world. A courier

@@ -244,22 +244,41 @@ a { color: inherit; text-decoration: none; }
 .step {
   background: white;
   border-radius: 0;
-  padding: 32px 28px 36px;
+  padding: 0;
   border: 1px solid var(--cream-hair);
-  display: flex; flex-direction: column; gap: 20px;
-  min-height: 340px;
+  display: flex; flex-direction: column;
+  min-height: 380px;
   position: relative;
+  overflow: hidden;
   transition: transform 400ms, box-shadow 400ms;
 }
 .step:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -20px rgba(12,31,34,0.2); }
-.step__n {
-  font-family: 'Archivo Black'; font-size: 16px; color: var(--teal);
-  letter-spacing: -0.01em;
-  display: flex; justify-content: space-between; align-items: center;
+.step__viz {
+  height: 220px; border-radius: 0; background: var(--ink);
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--cream-hair);
 }
-.step__n em { font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(12,31,34,0.4); font-style: normal; }
-.step__viz { height: 120px; border-radius: 0; background: var(--ink); position: relative; overflow: hidden; }
 .step__viz--photo { background-size: cover; background-position: center; filter: saturate(105%) contrast(105%); }
+.step__n {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  font-family: 'Archivo Black'; font-size: 14px; color: var(--cream);
+  letter-spacing: -0.01em;
+  display: inline-flex; gap: 10px; align-items: center;
+  padding: 6px 10px;
+  background: rgba(12,31,34,0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(47,216,216,0.35);
+}
+.step__n em {
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--teal-glow); font-style: normal;
+}
+.step__body {
+  padding: 26px 28px 32px;
+  display: flex; flex-direction: column; gap: 14px;
+  flex: 1;
+}
 .step h3 { margin: 0; font-family: 'Archivo Black'; font-size: 22px; letter-spacing: -0.02em; line-height: 1.1; }
 .step p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--copy); }
 
