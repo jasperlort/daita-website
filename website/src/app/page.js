@@ -121,30 +121,44 @@ export default function Page() {
     return () => io.disconnect();
   }, []);
 
-  // Scroll-linked walk animation (desktop only; mobile uses CSS keyframes)
+  // Frame-by-frame scroll scrub of the walk video. CSS animation-timeline
+  // handles the horizontal translate; this hook drives playback position
+  // so stopping the scroll freezes the current frame.
   useEffect(() => {
-    if (window.matchMedia('(max-width: 1020px)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = document.getElementById('walk');
-    const man = section?.querySelector('.walk__man');
-    if (!section || !man) return;
+    const video = section?.querySelector('video.walk__man');
+    if (!section || !video) return;
+
+    video.pause();
+    video.loop = false;
+    video.muted = true;
+
     let raf = 0;
     const update = () => {
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const travel = rect.height - vh;
-      const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
-      const tx = -15 + p * 130; // -15vw (off-left) to 115vw (off-right)
-      man.style.setProperty('--walk', tx.toFixed(2) + 'vw');
       raf = 0;
+      if (!video.duration || isNaN(video.duration)) return;
+      const rect = section.getBoundingClientRect();
+      const travel = rect.height - window.innerHeight;
+      const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
+      const t = p * video.duration;
+      if (Math.abs(video.currentTime - t) > 0.01) video.currentTime = t;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Attach to both window and document — different browsers fire scroll
+    // on different targets depending on which element is the root scroller.
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
     window.addEventListener('resize', onScroll);
-    update();
+    video.addEventListener('loadedmetadata', update);
+    if (video.readyState >= 1) update();
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
+      document.removeEventListener('scroll', onScroll, { capture: true });
       window.removeEventListener('resize', onScroll);
+      video.removeEventListener('loadedmetadata', update);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
@@ -424,11 +438,10 @@ export default function Page() {
           <video
             className="walk__man"
             src="/videos/mascot-walk.webm"
-            autoPlay
-            loop
             muted
             playsInline
             preload="auto"
+            disablePictureInPicture
             aria-label="A DAITA contributor in teal suit walking with a 360° camera"
           />
         </div>
