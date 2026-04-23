@@ -142,8 +142,14 @@ export default function Page() {
     const tick = () => {
       if (video.duration && !isNaN(video.duration)) {
         const rect = section.getBoundingClientRect();
-        const travel = rect.height - window.innerHeight;
-        const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
+        const vh = window.innerHeight;
+        // Match the CSS `animation-range: entry 0% exit 100%`:
+        // p=0 when the section top touches the bottom of the viewport
+        // (rect.top === vh), p=1 when the section bottom touches the top
+        // of the viewport (rect.top === -rect.height). That gives scrub
+        // travel of (vh + rect.height), matching the CSS translate.
+        const total = vh + rect.height;
+        const p = Math.max(0, Math.min(1, (vh - rect.top) / Math.max(1, total)));
         const t = p * video.duration;
         if (Math.abs(t - lastT) > 0.008) {
           video.currentTime = t;
