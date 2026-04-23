@@ -529,95 +529,14 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="caps" id="capabilities">
-        <div className="caps__head">
-          <div>
-            <h2>A living map of <em>the real world</em>.</h2>
-          </div>
-          <small>06 modules · 01 stack</small>
+      <section className="splat-demo" id="capabilities">
+        <div className="splat-demo__head">
+          <h2>One capture. <em>Every</em> reality format.</h2>
         </div>
-
-        <div className="caps__grid">
-          <div className="card huge reveal">
-            <div className="card__idx">
-              <span>01 / NETWORK</span>
-              <span className="card__pill"><span className="dot" />Live</span>
-            </div>
-            <h3 className="card__title">A DePIN for real-world 3D.</h3>
-            <p className="card__body">
-              A decentralized physical infrastructure network: tens of thousands of
-              everyday contributors running the right capture rig. Coverage grows
-              with the cities people already move through, not with the fleet we
-              can afford.
-            </p>
-            <div className="sensorviz" id="sensorviz" />
-          </div>
-
-          <div className="card tall reveal">
-            <div className="card__idx"><span>02 / SCALE</span></div>
-            <h3 className="card__title">Crowd-scale, not fleet-scale.</h3>
-            <p className="card__body">Every extra contributor is extra coverage. Growth compounds; reality refreshes.</p>
-            <div className="card__fig">14.2<sup>k</sup></div>
-          </div>
-
-          <div className="card reveal">
-            <div className="card__idx"><span>03 / FRESHNESS</span></div>
-            <h3 className="card__title">Weekly refresh, not yearly.</h3>
-            <p className="card__body">Same streets, re-captured — your data ages in weeks, not years.</p>
-            <div className="card__fig">7<sup>days</sup></div>
-          </div>
-
-          <div className="card reveal">
-            <div className="card__idx"><span>04 / PRECISION</span></div>
-            <h3 className="card__title">Centimeter-scale pose.</h3>
-            <p className="card__body">Every clip ships with a precise camera pose. Powers visual positioning, AR anchoring and robotics localization.</p>
-            <div className="card__fig">±1<sup>cm</sup></div>
-          </div>
-
-          <div className="card wide reveal">
-            <div className="card__idx"><span>05 / OUTPUT</span></div>
-            <h3 className="card__title">Meshes, splats, pose &amp; VPS anchors.</h3>
-            <p className="card__body">
-              Photogrammetric meshes, Gaussian splats, labelled point clouds, VPS
-              anchors and pose-aligned video. Whatever format your pipeline expects —
-              pulled by API, SDK or bulk.
-            </p>
-            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />API · SDK · Bulk</div>
-          </div>
-
-          <div className="card wide reveal">
-            <div className="card__idx"><span>06 / GLOBAL</span></div>
-            <h3 className="card__title">Global by{'\u00A0'}design.</h3>
-            <p className="card__body">
-              Launch a new city by onboarding its couriers, not by shipping a fleet.
-              The network is already there — at a fraction of the per-km² cost of a
-              bespoke scan.
-            </p>
-            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />Beta · 48 pilot cities targeted</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="showcase" id="showcase">
-        <div className="showcase__viz">
+        <div className="splat-demo__stage">
           <div className="showcase__label tl">◉ Contributor scan · pilot capture</div>
           <div className="showcase__label br">SPLAT · drag to orbit</div>
           <div className="showcase__splat"><SplatViewer /></div>
-        </div>
-        <div className="showcase__txt">
-          <h3>One capture. <em>Every</em> reality format.</h3>
-          <p>
-            DAITA&apos;s reconstruction engine ingests contributor video and outputs
-            a calibrated, semantically labelled, version-tracked 3D scene. Pull the
-            format your pipeline expects — training data, HD maps, VPS anchors — by
-            API.
-          </p>
-          <ul>
-            <li><b>01</b> <i>Photogrammetric mesh</i> <u>OBJ · GLB · USD</u></li>
-            <li><b>02</b> <i>Gaussian splats</i> <u>PLY · SPLAT</u></li>
-            <li><b>03</b> <i>Labelled point cloud</i> <u>LAS · E57</u></li>
-            <li><b>04</b> <i>VPS anchors &amp; pose</i> <u>JSON · protobuf</u></li>
-          </ul>
         </div>
       </section>
 

@@ -423,7 +423,45 @@ a { color: inherit; text-decoration: none; }
 .sensor-edge { stroke: rgba(47,216,216,0.35); stroke-width: 1; fill: none; }
 .sensor-scan { fill: rgba(47,216,216,0.08); }
 
-/* Showcase */
+/* Splat demo — full-width splat scene, replaces the capabilities grid */
+.splat-demo {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 100px 56px 110px;
+  border-top: 1px solid rgba(47,216,216,0.2);
+  border-bottom: 1px solid rgba(47,216,216,0.2);
+}
+.splat-demo__head {
+  max-width: 1400px; margin: 0 auto 48px;
+}
+.splat-demo__head h2 {
+  font-family: 'Archivo Black';
+  font-size: clamp(40px, 5.2vw, 80px);
+  line-height: 0.98; letter-spacing: -0.035em;
+  margin: 0; max-width: 18ch;
+}
+.splat-demo__head h2 em {
+  font-style: italic; font-family: 'Instrument Serif';
+  color: var(--teal-glow); font-weight: 400; padding: 0 0.05em;
+}
+.splat-demo__stage {
+  max-width: 1400px; margin: 0 auto;
+  position: relative;
+  height: 72vh;
+  background: #081619;
+  border: 1px solid rgba(47,216,216,0.25);
+  overflow: hidden;
+}
+.splat-demo__stage .showcase__splat {
+  position: absolute; inset: 0;
+}
+@media (max-width: 1020px) {
+  .splat-demo { padding-left: 20px; padding-right: 20px; padding-top: 64px; padding-bottom: 72px; }
+  .splat-demo__head { margin-bottom: 32px; }
+  .splat-demo__stage { height: 60vh; }
+}
+
+/* Showcase (legacy, no longer rendered — kept so SplatViewer wiring stays stable) */
 .showcase {
   padding: 110px 56px;
   display: grid; grid-template-columns: 1fr 1fr;
