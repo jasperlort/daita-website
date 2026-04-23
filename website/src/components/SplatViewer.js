@@ -227,19 +227,21 @@ async function RealSplatScene({ container }) {
   const GaussianSplats3D = (await import('@mkkellogg/gaussian-splats-3d')).default;
 
   const viewer = new GaussianSplats3D.Viewer({
-    cameraUp: [0, -1, 0],
-    initialCameraPosition: [0, -6, -38],
+    cameraUp: [0, 1, 0],
+    initialCameraPosition: [0, 6, 38],
     initialCameraLookAt: [0, 0, 0],
     rootElement: container,
     selfDrivenMode: true,
     sharedMemoryForWorkers: false,
   });
 
+  // Flip the scene around X by 180°: splatfacto/COLMAP output is Y-down
+  // in world space; Three.js defaults to Y-up. Quaternion [1,0,0,0] = 180° on X.
   await viewer.addSplatScene(SPLAT_PATH, {
     splatAlphaRemovalThreshold: 5,
     showLoadingUI: false,
     position: [0, 0, 0],
-    rotation: [0, 0, 0, 1],
+    rotation: [1, 0, 0, 0],
     scale: [1, 1, 1],
   });
 
