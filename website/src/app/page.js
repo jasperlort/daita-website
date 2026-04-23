@@ -129,32 +129,26 @@ export default function Page() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = document.getElementById('walk');
-    const video = section?.querySelector('video.walk__man');
-    if (!section || !video) return;
+    const man = section?.querySelector('.walk__man');
+    if (!section || !man) return;
 
-    video.pause();
-    video.loop = false;
-    video.muted = true;
+    const COLS = 10, ROWS = 6, TOTAL = COLS * ROWS;
 
     let running = false;
     let raf = 0;
-    let lastT = -1;
+    let lastFrame = -1;
     const tick = () => {
-      if (video.duration && !isNaN(video.duration)) {
-        const rect = section.getBoundingClientRect();
-        const vh = window.innerHeight;
-        // Match the CSS `animation-range: entry 0% exit 100%`:
-        // p=0 when the section top touches the bottom of the viewport
-        // (rect.top === vh), p=1 when the section bottom touches the top
-        // of the viewport (rect.top === -rect.height). That gives scrub
-        // travel of (vh + rect.height), matching the CSS translate.
-        const total = vh + rect.height;
-        const p = Math.max(0, Math.min(1, (vh - rect.top) / Math.max(1, total)));
-        const t = p * video.duration;
-        if (Math.abs(t - lastT) > 0.008) {
-          video.currentTime = t;
-          lastT = t;
-        }
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = vh + rect.height;
+      const p = Math.max(0, Math.min(1, (vh - rect.top) / Math.max(1, total)));
+      const frame = Math.min(TOTAL - 1, Math.floor(p * TOTAL));
+      if (frame !== lastFrame) {
+        const col = frame % COLS;
+        const row = Math.floor(frame / COLS);
+        man.style.backgroundPositionX = (col / (COLS - 1)) * 100 + '%';
+        man.style.backgroundPositionY = (row / (ROWS - 1)) * 100 + '%';
+        lastFrame = frame;
       }
       if (running) raf = requestAnimationFrame(tick);
     };
@@ -174,13 +168,11 @@ export default function Page() {
       { rootMargin: '200px 0px' }
     );
     io.observe(section);
-    video.addEventListener('loadedmetadata', tick);
 
     return () => {
       io.disconnect();
       running = false;
       if (raf) cancelAnimationFrame(raf);
-      video.removeEventListener('loadedmetadata', tick);
     };
   }, []);
 
@@ -456,13 +448,9 @@ export default function Page() {
             <h2>Every <em>mover</em> a mapper.</h2>
           </div>
           <div className="walk__horizon" />
-          <video
+          <div
             className="walk__man"
-            src="/videos/mascot-walk.webm"
-            muted
-            playsInline
-            preload="auto"
-            disablePictureInPicture
+            role="img"
             aria-label="A DAITA contributor in teal suit walking with a 360° camera"
           />
         </div>

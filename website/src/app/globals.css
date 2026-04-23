@@ -661,11 +661,15 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
 }
 .walk__horizon { display: none; }
 .walk__man {
+  aspect-ratio: 3 / 4;
   height: 52vh;
-  will-change: transform;
+  background-image: url(/images/walk-sprite.webp);
+  background-repeat: no-repeat;
+  background-size: 1000% 600%;   /* 10 cols × 6 rows */
+  background-position: 0 0;
+  will-change: background-position, transform;
   user-select: none;
   pointer-events: none;
-  /* JS fallback driver for browsers without animation-timeline */
   transform: translate3d(var(--walk, -15vw), 0, 0);
   position: relative;
   z-index: 1;
