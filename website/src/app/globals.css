@@ -612,13 +612,27 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   background: linear-gradient(90deg, transparent, var(--cream-hair) 15%, var(--cream-hair) 85%, transparent);
 }
 .walk__man {
-  --walk: -15vw;
   height: 43vh;
-  transform: translate3d(var(--walk), 0, 0);
   will-change: transform;
   margin-bottom: 10vh;
   user-select: none;
   pointer-events: none;
+  /* JS fallback driver (see SplatViewer-adjacent effect in page.js) */
+  transform: translate3d(var(--walk, -15vw), 0, 0);
+}
+/* Native scroll-driven animation — covers modern Chrome/Edge/Safari. */
+@supports (animation-timeline: view()) {
+  .walk { view-timeline-name: --walkT; view-timeline-axis: block; }
+  .walk__man {
+    animation: walkByScroll linear both;
+    animation-timeline: --walkT;
+    animation-range: entry 0% exit 100%;
+    transform: none; /* let keyframes drive */
+  }
+  @keyframes walkByScroll {
+    from { transform: translate3d(-15vw, 0, 0); }
+    to   { transform: translate3d(115vw, 0, 0); }
+  }
 }
 .walk__caption {
   position: absolute;
