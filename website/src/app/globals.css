@@ -13,13 +13,15 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 body {
   background: var(--cream);
   color: var(--ink);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 
@@ -611,10 +613,10 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
 }
 .walk__man {
   --walk: -15vw;
-  height: 72vh;
+  height: 43vh;
   transform: translate3d(var(--walk), 0, 0);
   will-change: transform;
-  margin-bottom: 8vh;
+  margin-bottom: 10vh;
   user-select: none;
   pointer-events: none;
 }
@@ -648,7 +650,7 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   .walk { height: 140vh; }
   .walk__caption { left: 24px; top: 8vh; }
   .walk__man {
-    height: 62vh;
+    height: 38vh;
     animation: walkOnMobile 14s linear infinite;
   }
   @keyframes walkOnMobile {
