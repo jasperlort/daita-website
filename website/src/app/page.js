@@ -315,6 +315,7 @@ export default function Page() {
           <a href="#how">How</a>
           <a href="#capabilities">Platform</a>
           <a href="#uses">Use cases</a>
+          <a href="#faq">FAQ</a>
           <a href="#contrib">Contribute</a>
         </div>
         <a className="nav__cta" href="#final"><span className="dot" />Join the beta</a>
@@ -361,6 +362,27 @@ export default function Page() {
       <div className="ticker">
         <div className="ticker__track" id="ticker" />
       </div>
+
+      <section className="stats">
+        <div className="stats__row">
+          <div className="stat">
+            <div className="stat__n">±1<sup>CM</sup></div>
+            <div className="stat__label">Pose accuracy</div>
+          </div>
+          <div className="stat">
+            <div className="stat__n">7<sup>DAYS</sup></div>
+            <div className="stat__label">Refresh cadence</div>
+          </div>
+          <div className="stat">
+            <div className="stat__n">4<em>×</em></div>
+            <div className="stat__label">Output formats shipped</div>
+          </div>
+          <div className="stat">
+            <div className="stat__n">100<sup>%</sup></div>
+            <div className="stat__label">Rights-cleared</div>
+          </div>
+        </div>
+      </section>
 
       <section className="manifesto" id="manifesto">
         <div className="manifesto__block">
@@ -499,7 +521,7 @@ export default function Page() {
               The network is already there — at a fraction of the per-km² cost of a
               bespoke scan.
             </p>
-            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />48 cities live</div>
+            <div className="card__pill" style={{ alignSelf: 'flex-start' }}><span className="dot" />Beta · 48 pilot cities targeted</div>
           </div>
         </div>
       </section>
@@ -574,6 +596,20 @@ export default function Page() {
         </div>
       </section>
 
+      <section className="partners">
+        <div className="partners__kicker"><span>Built for teams like</span></div>
+        <div className="partners__grid">
+          <div className="partners__logo">Waymo<small>AV stack</small></div>
+          <div className="partners__logo">Mapbox<small>HD mapping</small></div>
+          <div className="partners__logo">Niantic<small>Spatial / VPS</small></div>
+          <div className="partners__logo">Boston Dynamics<small>Robotics</small></div>
+          <div className="partners__logo">Cruise<small>AV sim</small></div>
+          <div className="partners__logo">Magic Leap<small>XR anchoring</small></div>
+          <div className="partners__logo">TomTom<small>Map refresh</small></div>
+          <div className="partners__logo">Nvidia Cosmos<small>WFMs</small></div>
+        </div>
+      </section>
+
       <section className="stacker">
         <div className="stacker__row">
           <span>CAPTURE</span><span>REFRESH</span><span>DELIVER</span><em>·</em>
@@ -582,6 +618,49 @@ export default function Page() {
         <div className="stacker__row">
           MESH <em>·</em> SPLAT <em>·</em> POSE <em>·</em> VPS <em>·</em>
           MESH <em>·</em> SPLAT <em>·</em> POSE <em>·</em> VPS <em>·</em>
+        </div>
+      </section>
+
+      <section className="faq" id="faq">
+        <div className="faq__head">
+          <div>
+            <h2>Questions, <em>answered</em>.</h2>
+          </div>
+          <small>08 things people ask</small>
+        </div>
+        <div className="faq__grid">
+          <div className="faq__item">
+            <h3 className="faq__q">What do contributors need?</h3>
+            <p className="faq__a">A <b>DAITA capture rig</b> — a 360° camera, GPS and the contributor app — plus a vehicle or bike they already ride. We ship the rig to verified contributors; no technical skills required.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">How do contributors get paid?</h3>
+            <p className="faq__a">On every <b>verified kilometre</b> uploaded. Payouts are weekly and scale with coverage quality, freshness and geographic rarity. A courier running a daily route earns every trip.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">Who owns the raw footage?</h3>
+            <p className="faq__a">Contributors do. DAITA receives a <b>commercial licence</b> to process and redistribute the reconstructed 3D assets, with faces and plates automatically redacted before any byte leaves our pipeline.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">What about privacy?</h3>
+            <p className="faq__a"><b>Privacy by design.</b> Face and licence-plate redaction runs on-device before upload; raw footage is never stored. Buyers only ever receive the reconstructed 3D scene with semantic labels.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">How is this different from Hivemapper or OVER?</h3>
+            <p className="faq__a">Hivemapper delivers 2D street imagery; OVER builds a VPS atlas for AR. DAITA ships the full <b>3D reconstruction</b> — meshes, splats, pose, VPS anchors — for Physical AI training, not just navigation.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">What formats ship?</h3>
+            <p className="faq__a">Photogrammetric mesh (OBJ · GLB · USD), Gaussian splats (PLY · SPLAT · KHR_gaussian_splatting), labelled point clouds (LAS · E57), VPS anchors (JSON · protobuf) and pose-aligned video.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">Is the network open yet?</h3>
+            <p className="faq__a">DAITA is in <b>private beta</b>. We&apos;re onboarding pilot cities with partner fleets and individual contributors. <a href="mailto:join@daita.eu" style={{ color: 'var(--teal)', textDecoration: 'underline' }}>Join the waitlist</a> to get priority access.</p>
+          </div>
+          <div className="faq__item">
+            <h3 className="faq__q">Is there a token?</h3>
+            <p className="faq__a">The DePIN layer is designed to support on-chain payouts, but DAITA pays contributors in <b>local currency by default</b>. A token layer is on the roadmap; nothing to speculate on today.</p>
+          </div>
         </div>
       </section>
 
@@ -598,6 +677,16 @@ export default function Page() {
           <a className="nav__cta" href="mailto:join@daita.eu" style={{ marginTop: 28 }}>
             <span className="dot" />Join the network
           </a>
+
+          <div className="rig">
+            <div className="rig__title">The rig · shipped free</div>
+            <ul>
+              <li><b>Camera</b>360° · 8K · stabilised</li>
+              <li><b>GPS</b>RTK-ready, ±30 cm baseline</li>
+              <li><b>App</b>auto-upload, privacy on-device</li>
+              <li><b>Mount</b>helmet · handlebar · roof</li>
+            </ul>
+          </div>
         </div>
         <div className="contrib__r">
           <div className="who">
@@ -627,16 +716,19 @@ export default function Page() {
         <h2>Real world,<br /><em>really</em> in 3D.</h2>
         <div className="final__row">
           <p>
-            Whether you need fresh geometry of a single city block or an always-on
-            pipeline across a continent — DAITA is the layer that turns motion into data.
+            DAITA is in private beta with pilot cities, partner fleets and
+            founding contributors. Get on the list — whether you want to license
+            the data, run a fleet or capture a block at a time, we&apos;ll reach out
+            as seats open.
           </p>
           <div className="final__cta">
             <a className="big" href="mailto:hello@daita.eu">
               hello@daita.eu
               <span className="arrow">→</span>
             </a>
-            <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <a className="ghost" href="#how">How it works</a>
+              <a className="ghost" href="#faq">FAQ</a>
               <a className="ghost" href="#contrib">Become a contributor</a>
             </div>
           </div>
