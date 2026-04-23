@@ -350,7 +350,6 @@ export default function Page() {
           <a href="#how">How</a>
           <a href="#capabilities">Platform</a>
           <a href="#uses">Use cases</a>
-          <a href="#faq">FAQ</a>
           <a href="#contrib">Contribute</a>
         </div>
         <button
@@ -369,7 +368,6 @@ export default function Page() {
         <a href="#how">How</a>
         <a href="#capabilities">Platform</a>
         <a href="#uses">Use cases</a>
-        <a href="#faq">FAQ</a>
         <a href="#contrib">Contribute</a>
         <a href="#final" className="nav__mobile-cta">Join the beta →</a>
       </div>
@@ -668,49 +666,6 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="faq" id="faq">
-        <div className="faq__head">
-          <div>
-            <h2>Questions, <em>answered</em>.</h2>
-          </div>
-          <small>08 things people ask</small>
-        </div>
-        <div className="faq__grid">
-          <div className="faq__item">
-            <h3 className="faq__q">What do contributors need?</h3>
-            <p className="faq__a">A <b>DAITA capture rig</b> — a 360° camera, GPS and the contributor app — plus a vehicle or bike they already ride. We ship the rig to verified contributors; no technical skills required.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">How do contributors get paid?</h3>
-            <p className="faq__a">On every <b>verified kilometre</b> uploaded. Payouts are weekly and scale with coverage quality, freshness and geographic rarity. A courier running a daily route earns every trip.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">Who owns the raw footage?</h3>
-            <p className="faq__a">Contributors do. DAITA receives a <b>commercial licence</b> to process and redistribute the reconstructed 3D assets, with faces and plates automatically redacted before any byte leaves our pipeline.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">What about privacy?</h3>
-            <p className="faq__a"><b>Privacy by design.</b> Face and licence-plate redaction runs on-device before upload; raw footage is never stored. Buyers only ever receive the reconstructed 3D scene with semantic labels.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">How is this different from Hivemapper or OVER?</h3>
-            <p className="faq__a">Hivemapper delivers 2D street imagery; OVER builds a VPS atlas for AR. DAITA ships the full <b>3D reconstruction</b> — meshes, splats, pose, VPS anchors — for Physical AI training, not just navigation.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">What formats ship?</h3>
-            <p className="faq__a">Photogrammetric mesh (OBJ · GLB · USD), Gaussian splats (PLY · SPLAT · KHR_gaussian_splatting), labelled point clouds (LAS · E57), VPS anchors (JSON · protobuf) and pose-aligned video.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">Is the network open yet?</h3>
-            <p className="faq__a">DAITA is in <b>private beta</b>. We&apos;re onboarding pilot cities with partner fleets and individual contributors. <a href="mailto:join@daita.eu" style={{ color: 'var(--teal)', textDecoration: 'underline' }}>Join the waitlist</a> to get priority access.</p>
-          </div>
-          <div className="faq__item">
-            <h3 className="faq__q">Is there a token?</h3>
-            <p className="faq__a">The DePIN layer is designed to support on-chain payouts, but DAITA pays contributors in <b>local currency by default</b>. A token layer is on the roadmap; nothing to speculate on today.</p>
-          </div>
-        </div>
-      </section>
-
       <section className="contrib" id="contrib">
         <div className="contrib__l">
           <h3>If you <em>move</em>, you can map.</h3>
@@ -775,7 +730,6 @@ export default function Page() {
             </a>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <a className="ghost" href="#how">How it works</a>
-              <a className="ghost" href="#faq">FAQ</a>
               <a className="ghost" href="#contrib">Become a contributor</a>
             </div>
           </div>
