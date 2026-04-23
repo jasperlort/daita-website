@@ -594,7 +594,7 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
 .walk {
   background: var(--cream);
   position: relative;
-  height: 220vh;
+  height: 130vh;
   border-bottom: 1px solid var(--cream-hair);
 }
 .walk__inner {
@@ -603,22 +603,19 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   height: 100vh;
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-start;
 }
-.walk__horizon {
-  position: absolute; left: 0; right: 0; bottom: 18%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cream-hair) 15%, var(--cream-hair) 85%, transparent);
-}
+.walk__horizon { display: none; }
 .walk__man {
-  height: 43vh;
+  height: 52vh;
   will-change: transform;
-  margin-bottom: 10vh;
   user-select: none;
   pointer-events: none;
-  /* JS fallback driver (see SplatViewer-adjacent effect in page.js) */
+  /* JS fallback driver for browsers without animation-timeline */
   transform: translate3d(var(--walk, -15vw), 0, 0);
+  position: relative;
+  z-index: 1;
 }
 /* Native scroll-driven animation — covers modern Chrome/Edge/Safari. */
 @supports (animation-timeline: view()) {
@@ -636,8 +633,9 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
 }
 .walk__caption {
   position: absolute;
-  top: 10vh; left: 56px;
-  max-width: 26ch;
+  top: 50%; left: 56px;
+  transform: translateY(-50%);
+  max-width: 22ch;
   z-index: 2;
 }
 .walk__caption small {
@@ -661,10 +659,10 @@ footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }
   .walk__man { animation: none !important; }
 }
 @media (max-width: 1020px) {
-  .walk { height: 140vh; }
-  .walk__caption { left: 24px; top: 8vh; }
+  .walk { height: 110vh; }
+  .walk__caption { left: 24px; }
   .walk__man {
-    height: 38vh;
+    height: 42vh;
     animation: walkOnMobile 14s linear infinite;
   }
   @keyframes walkOnMobile {
