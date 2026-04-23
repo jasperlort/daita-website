@@ -224,7 +224,10 @@ function ProceduralSplatScene({ container }) {
 
 // ââ Real Gaussian Splat Viewer ââ
 async function RealSplatScene({ container }) {
-  const GaussianSplats3D = (await import('@mkkellogg/gaussian-splats-3d')).default;
+  // The package uses named ESM exports; `.default` is undefined in the
+  // Next.js dynamic-import output. Fall back to the namespace object itself.
+  const GaussianSplats3DModule = await import('@mkkellogg/gaussian-splats-3d');
+  const GaussianSplats3D = GaussianSplats3DModule.default || GaussianSplats3DModule;
 
   const viewer = new GaussianSplats3D.Viewer({
     cameraUp: [0, 1, 0],
