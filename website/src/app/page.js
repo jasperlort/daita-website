@@ -122,8 +122,10 @@ export default function Page() {
   }, []);
 
   // Frame-by-frame scroll scrub of the walk video. CSS animation-timeline
-  // handles the horizontal translate; this hook drives playback position
-  // so stopping the scroll freezes the current frame.
+  // drives the horizontal translate; this hook drives playback position so
+  // stopping the scroll freezes the current frame. We use a rAF loop gated
+  // by IntersectionObserver instead of scroll events — works regardless of
+  // whether the root scroller is html or body, or whether scroll events fire.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = document.getElementById('walk');
@@ -134,32 +136,45 @@ export default function Page() {
     video.loop = false;
     video.muted = true;
 
+    let running = false;
     let raf = 0;
-    const update = () => {
-      raf = 0;
-      if (!video.duration || isNaN(video.duration)) return;
-      const rect = section.getBoundingClientRect();
-      const travel = rect.height - window.innerHeight;
-      const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
-      const t = p * video.duration;
-      if (Math.abs(video.currentTime - t) > 0.01) video.currentTime = t;
+    let lastT = -1;
+    const tick = () => {
+      if (video.duration && !isNaN(video.duration)) {
+        const rect = section.getBoundingClientRect();
+        const travel = rect.height - window.innerHeight;
+        const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, travel)));
+        const t = p * video.duration;
+        if (Math.abs(t - lastT) > 0.008) {
+          video.currentTime = t;
+          lastT = t;
+        }
+      }
+      if (running) raf = requestAnimationFrame(tick);
     };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-
-    // Attach to both window and document — different browsers fire scroll
-    // on different targets depending on which element is the root scroller.
-    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    window.addEventListener('resize', onScroll);
-    video.addEventListener('loadedmetadata', update);
-    if (video.readyState >= 1) update();
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!running) {
+            running = true;
+            raf = requestAnimationFrame(tick);
+          }
+        } else {
+          running = false;
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      },
+      { rootMargin: '200px 0px' }
+    );
+    io.observe(section);
+    video.addEventListener('loadedmetadata', tick);
 
     return () => {
-      window.removeEventListener('scroll', onScroll, { capture: true });
-      document.removeEventListener('scroll', onScroll, { capture: true });
-      window.removeEventListener('resize', onScroll);
-      video.removeEventListener('loadedmetadata', update);
+      io.disconnect();
+      running = false;
       if (raf) cancelAnimationFrame(raf);
+      video.removeEventListener('loadedmetadata', tick);
     };
   }, []);
 
