@@ -706,8 +706,8 @@ export default function Page() {
           </div>
         </div>
         <div className="foot__bot">
-          <span>© 2026 DAITA Labs · Private beta</span>
-          <span>The DoorDash for 3D data</span>
+          <span>© 2026 DAITA · Private beta</span>
+          <span><a href="https://getdaita.com">getdaita.com</a></span>
         </div>
       </footer>
     </>
