@@ -403,6 +403,7 @@ export default function Page() {
         <video
           className="hero__video"
           src="/videos/hero.mp4"
+          poster="/og-image.png"
           autoPlay
           muted
           loop

@@ -51,7 +51,7 @@ export const metadata = {
     locale: 'en_US',
     images: [
       {
-        url: '/og-image.png',
+        url: `${SITE}/og-image.png`,
         width: 1200,
         height: 627,
         alt: 'DAITA — getdaita.com',
@@ -63,7 +63,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: TITLE,
     description: DESC,
-    images: ['/og-image.png'],
+    images: [`${SITE}/og-image.png`],
     creator: '@daita',
   },
   robots: {
