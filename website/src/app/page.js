@@ -619,7 +619,7 @@ export default function Page() {
             ship the hardware, handle the processing, and pay out on every
             verified kilometre captured.
           </p>
-          <a className="nav__cta" href="mailto:join@daita.eu" style={{ marginTop: 28 }}>
+          <a className="nav__cta" href="mailto:join@getdaita.com" style={{ marginTop: 28 }}>
             <span className="dot" />Join the network
           </a>
 
@@ -667,8 +667,8 @@ export default function Page() {
             as seats open.
           </p>
           <div className="final__cta">
-            <a className="big" href="mailto:hello@daita.eu">
-              hello@daita.eu
+            <a className="big" href="mailto:hello@getdaita.com">
+              hello@getdaita.com
               <span className="arrow">→</span>
             </a>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -697,8 +697,8 @@ export default function Page() {
           </div>
           <div className="foot__col">
             <h4>Contact</h4>
-            <a href="mailto:hello@daita.eu">hello@daita.eu</a>
-            <a href="mailto:join@daita.eu">join@daita.eu</a>
+            <a href="mailto:hello@getdaita.com">hello@getdaita.com</a>
+            <a href="mailto:join@getdaita.com">join@getdaita.com</a>
             <a href="#">Partner with us →</a>
           </div>
         </div>
