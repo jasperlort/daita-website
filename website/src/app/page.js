@@ -413,9 +413,6 @@ export default function Page() {
 
         <div className="hero__inner">
           <div className="hero__meta">
-            <span>Network<strong>14,200+ contributors</strong></span>
-            <span>Coverage<strong>48 cities · 12 countries</strong></span>
-            <span>Dataset<strong>2.4M km captured</strong></span>
             <span>Status <strong style={{ color: 'var(--teal-glow)' }}>◉ In Beta</strong></span>
           </div>
 
