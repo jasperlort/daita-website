@@ -501,7 +501,7 @@ export default function Page() {
           </div>
           <div className="step reveal">
             <div className="step__n">02 <em>Upload &amp; earn</em></div>
-            <div className="step__viz" data-viz="upload" />
+            <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-2.webp)' }} />
             <div className="step__body">
               <h3>Footage lands, contributors earn.</h3>
               <p>Video streams in pose- and route-tagged; the network pays on every verified kilometre. Redundant passes strengthen coverage.</p>
@@ -509,7 +509,7 @@ export default function Page() {
           </div>
           <div className="step reveal">
             <div className="step__n">03 <em>Reconstruct</em></div>
-            <div className="step__viz" data-viz="mesh" />
+            <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-3.webp)' }} />
             <div className="step__body">
               <h3>Raw video becomes 3D.</h3>
               <p>Structure-from-motion, 3D Gaussian Splatting and semantic labelling turn video into meshes, splats, labelled point clouds and precise camera poses.</p>
@@ -517,7 +517,7 @@ export default function Page() {
           </div>
           <div className="step reveal">
             <div className="step__n">04 <em>Deliver</em></div>
-            <div className="step__viz" data-viz="serve" />
+            <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-4.webp)' }} />
             <div className="step__body">
               <h3>Customers pull by API.</h3>
               <p>Geospatial AI teams, robotics and AV platforms, simulation studios and digital-twin operators pull fresh geometry, HD maps and VPS anchors on demand.</p>
