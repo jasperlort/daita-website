@@ -492,33 +492,33 @@ export default function Page() {
         </div>
         <div className="how__steps">
           <div className="step reveal">
-            <div className="step__n">01 <em>Capture</em></div>
             <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/capture.webp)' }} />
             <div className="step__body">
+              <div className="step__n">01 <em>Capture</em></div>
               <h3>Every trip is a capture.</h3>
               <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
             </div>
           </div>
           <div className="step reveal">
-            <div className="step__n">02 <em>Upload &amp; earn</em></div>
             <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-2.webp)' }} />
             <div className="step__body">
+              <div className="step__n">02 <em>Upload &amp; earn</em></div>
               <h3>Footage lands, contributors earn.</h3>
               <p>Video streams in pose- and route-tagged; the network pays on every verified kilometre. Redundant passes strengthen coverage.</p>
             </div>
           </div>
           <div className="step reveal">
-            <div className="step__n">03 <em>Reconstruct</em></div>
             <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-3.webp)' }} />
             <div className="step__body">
+              <div className="step__n">03 <em>Reconstruct</em></div>
               <h3>Raw video becomes 3D.</h3>
               <p>Structure-from-motion, 3D Gaussian Splatting and semantic labelling turn video into meshes, splats, labelled point clouds and precise camera poses.</p>
             </div>
           </div>
           <div className="step reveal">
-            <div className="step__n">04 <em>Deliver</em></div>
             <div className="step__viz step__viz--photo" style={{ backgroundImage: 'url(/images/step-4.webp)' }} />
             <div className="step__body">
+              <div className="step__n">04 <em>Deliver</em></div>
               <h3>Customers pull by API.</h3>
               <p>Geospatial AI teams, robotics and AV platforms, simulation studios and digital-twin operators pull fresh geometry, HD maps and VPS anchors on demand.</p>
             </div>

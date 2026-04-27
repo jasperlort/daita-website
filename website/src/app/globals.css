@@ -318,19 +318,14 @@ a { color: inherit; text-decoration: none; }
 }
 .step__viz--photo { background-size: cover; background-position: center; filter: saturate(105%) contrast(105%); }
 .step__n {
-  position: absolute; top: 14px; left: 14px; z-index: 2;
-  font-family: 'Archivo Black'; font-size: 14px; color: var(--cream);
+  font-family: 'Archivo Black'; font-size: 14px; color: var(--teal);
   letter-spacing: -0.01em;
   display: inline-flex; gap: 10px; align-items: center;
-  padding: 6px 10px;
-  background: rgba(12,31,34,0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(47,216,216,0.35);
+  margin-bottom: -4px;
 }
 .step__n em {
   font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--teal-glow); font-style: normal;
+  text-transform: uppercase; color: rgba(12,31,34,0.55); font-style: normal;
 }
 .step__body {
   padding: 26px 28px 32px;
