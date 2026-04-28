@@ -655,6 +655,18 @@ a { color: inherit; text-decoration: none; }
   color: var(--cream);
 }
 .final__cta a.ghost:hover { background: rgba(243,238,222,0.1); }
+.final__spin {
+  position: relative;
+  margin: 64px 0 0;
+  height: 240px;
+  pointer-events: none;
+}
+.final__spin .spinning-wordmark {
+  position: absolute; inset: 0;
+}
+@media (max-width: 640px) {
+  .final__spin { margin-top: 48px; height: 170px; }
+}
 
 /* Footer */
 footer { background: var(--ink); color: var(--cream); padding: 80px 56px 32px; }

@@ -8,6 +8,11 @@ const SplatViewer = dynamic(() => import('../components/SplatViewer'), {
   loading: () => null,
 });
 
+const SpinningWordmark = dynamic(() => import('../components/SpinningWordmark'), {
+  ssr: false,
+  loading: () => null,
+});
+
 const TICKER_ITEMS = [
   '<span>A <b>DePIN</b> for reality</span>',
   '<span>Gaussian <b>splats</b></span>',
@@ -660,22 +665,21 @@ export default function Page() {
 
       <section className="final" id="final">
         <h2>Real world,<br /><em>really</em> in 3D.</h2>
-        <div className="final__row">
-          <p>
-            DAITA is in private beta with pilot cities, partner fleets and
-            founding contributors. Get on the list — whether you want to license
-            the data, run a fleet or capture a block at a time, we&apos;ll reach out
-            as seats open.
-          </p>
-          <div className="final__cta">
-            <a className="big" href="mailto:hello@getdaita.com">
-              hello@getdaita.com
-              <span className="arrow">→</span>
-            </a>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <a className="ghost" href="#how">How it works</a>
-              <a className="ghost" href="#contrib">Become a contributor</a>
-            </div>
+        <p className="final__lede">
+          DAITA is in private beta with pilot cities, partner fleets and
+          founding contributors. Get on the list — whether you want to license
+          the data, run a fleet or capture a block at a time, we&apos;ll reach out
+          as seats open.
+        </p>
+        <div className="final__spin"><SpinningWordmark /></div>
+        <div className="final__cta">
+          <a className="big" href="mailto:hello@getdaita.com">
+            hello@getdaita.com
+            <span className="arrow">→</span>
+          </a>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <a className="ghost" href="#how">How it works</a>
+            <a className="ghost" href="#contrib">Become a contributor</a>
           </div>
         </div>
       </section>
