@@ -428,13 +428,12 @@ export default function Page() {
 
           <div className="hero__bot">
             <div className="hero__lede">
-              The <em>DoorDash</em> for 3D data — a decentralized network turning
+              The <em>DoorDash</em> for 3D data. A decentralized network turning
               everyday real-world movement into spatial data for AI, simulation,
               robotics and digital twins.
             </div>
             <div className="hero__cta">
               <a href="#manifesto">See how it works →</a>
-              <small>05 sections · live network</small>
             </div>
           </div>
         </div>
@@ -470,7 +469,7 @@ export default function Page() {
 
         <div className="manifesto__footnote">
           <p>
-            Physical AI needs real-world 3D — constantly refreshed, globally
+            Physical AI needs real-world 3D: constantly refreshed, globally
             diverse, rights-clean. Today it comes from centralized fleets,
             one-off lidar scans and bespoke licensing deals. That stack
             doesn&apos;t scale to the geography the next generation of{' '}
@@ -479,7 +478,7 @@ export default function Page() {
           </p>
           <p>
             DAITA is a <b>DePIN for reality</b>. A distributed network of
-            couriers, drivers and cyclists — running the right capture rig —
+            couriers, drivers and cyclists, running the right capture rig,
             becomes the collection layer. We reconstruct their video into
             meshes, Gaussian splats, labelled point clouds and pose-aligned
             sequences, and serve them as training data, HD maps and a{' '}
@@ -502,7 +501,7 @@ export default function Page() {
             <div className="step__body">
               <div className="step__n">01 <em>Capture</em></div>
               <h3>Every trip is a capture.</h3>
-              <p>Couriers, drivers and riders record passively as they move — no detour, no extra time. A block captured, a block refreshed.</p>
+              <p>Couriers, drivers and riders record passively as they move. No detour, no extra time. A block captured, a block refreshed.</p>
             </div>
           </div>
           <div className="step reveal">
@@ -554,13 +553,13 @@ export default function Page() {
           <div className="use">
             <div className="use__tag"><span>01 / FOUNDATION</span><span>LGMs</span></div>
             <h3>Large Geospatial Models.</h3>
-            <p>Train foundation models on geometry that actually matches the world people move through — constantly refreshed, geographically diverse, rights-clean.</p>
+            <p>Train foundation models on geometry that actually matches the world people move through. Constantly refreshed, geographically diverse, rights-clean.</p>
             <div className="use__examples"><span>LGM</span><span>WFM</span><span>VLA</span></div>
           </div>
           <div className="use">
             <div className="use__tag"><span>02 / ROBOTICS</span><span>nav + VPS</span></div>
             <h3>Robotics &amp; VPS.</h3>
-            <p>Replicas of real streets, warehouses and campuses plus centimeter-precise visual positioning — navigation that works indoor, outdoor and GPS-denied.</p>
+            <p>Replicas of real streets, warehouses and campuses plus centimeter-precise visual positioning. Navigation that works indoor, outdoor and GPS-denied.</p>
             <div className="use__examples"><span>delivery bots</span><span>AMRs</span><span>humanoids</span></div>
           </div>
           <div className="use">
@@ -607,7 +606,7 @@ export default function Page() {
           <p>
             The network is open to anyone already out in the world. A courier
             delivering lunches, a rider crossing town, a driver running a daily
-            route — with the right capture rig, every trip becomes coverage. We
+            route. With the right capture rig, every trip becomes coverage. We
             ship the hardware, handle the processing, and pay out on every
             verified kilometre captured.
           </p>
@@ -653,7 +652,7 @@ export default function Page() {
         <h2>Real world,<br /><em>really</em> in 3D.</h2>
         <p className="final__lede">
           DAITA is in private beta with pilot cities, partner fleets and
-          founding contributors. Get on the list — whether you want to license
+          founding contributors. Get on the list, whether you want to license
           the data, run a fleet or capture a block at a time, we&apos;ll reach out
           as seats open.
         </p>
