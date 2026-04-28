@@ -590,20 +590,6 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="partners">
-        <div className="partners__kicker"><span>Built for teams like</span></div>
-        <div className="partners__grid">
-          <div className="partners__logo">Waymo<small>AV stack</small></div>
-          <div className="partners__logo">Mapbox<small>HD mapping</small></div>
-          <div className="partners__logo">Niantic<small>Spatial / VPS</small></div>
-          <div className="partners__logo">Boston Dynamics<small>Robotics</small></div>
-          <div className="partners__logo">Cruise<small>AV sim</small></div>
-          <div className="partners__logo">Magic Leap<small>XR anchoring</small></div>
-          <div className="partners__logo">TomTom<small>Map refresh</small></div>
-          <div className="partners__logo">Nvidia Cosmos<small>WFMs</small></div>
-        </div>
-      </section>
-
       <section className="stacker">
         <div className="stacker__row">
           <span>CAPTURE</span><span>REFRESH</span><span>DELIVER</span><em>·</em>
