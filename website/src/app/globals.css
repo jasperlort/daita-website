@@ -664,7 +664,7 @@ a { color: inherit; text-decoration: none; }
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-top: 56px;
+  margin-top: 12px;
   margin-bottom: -80px;
   height: 520px;
   pointer-events: none;
@@ -688,7 +688,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 @media (max-width: 640px) {
-  .final__spin { margin-top: 40px; margin-bottom: -56px; height: 340px; }
+  .final__spin { margin-top: 8px; margin-bottom: -56px; height: 340px; }
 }
 
 /* Footer */
