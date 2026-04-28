@@ -658,14 +658,15 @@ a { color: inherit; text-decoration: none; }
 .final__spin {
   position: relative;
   margin: 64px 0 0;
-  height: 240px;
+  height: 360px;
   pointer-events: none;
 }
+.final__spin .plascassier-mini,
 .final__spin .spinning-wordmark {
   position: absolute; inset: 0;
 }
 @media (max-width: 640px) {
-  .final__spin { margin-top: 48px; height: 170px; }
+  .final__spin { margin-top: 48px; height: 260px; }
 }
 
 /* Footer */

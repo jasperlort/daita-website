@@ -8,7 +8,7 @@ const SplatViewer = dynamic(() => import('../components/SplatViewer'), {
   loading: () => null,
 });
 
-const SpinningWordmark = dynamic(() => import('../components/SpinningWordmark'), {
+const PlascassierMini = dynamic(() => import('../components/PlascassierMini'), {
   ssr: false,
   loading: () => null,
 });
@@ -671,7 +671,7 @@ export default function Page() {
           the data, run a fleet or capture a block at a time, we&apos;ll reach out
           as seats open.
         </p>
-        <div className="final__spin"><SpinningWordmark /></div>
+        <div className="final__spin"><PlascassierMini /></div>
         <div className="final__cta">
           <a className="big" href="mailto:hello@getdaita.com">
             hello@getdaita.com
