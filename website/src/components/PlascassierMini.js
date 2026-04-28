@@ -4,12 +4,19 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 /*
- * PlascassierMini — a 3D mini model of Plascassier (Provence, FR).
- * Building footprints are pulled from OpenStreetMap and baked into
- * /data/plascassier.json at build time. Each footprint is extruded by
- * its tagged height (or 6 m default) and rendered as a single merged
- * mesh that rotates slowly around the vertical axis on a turntable.
+ * PlascassierMini — Google Photorealistic 3D Tiles centred on
+ * Plascassier (Provence, FR). Same data Google Earth uses: full
+ * photogrammetric meshes with real photo textures.
+ *
+ * Needs a Google Maps Platform API key with the "Map Tiles API"
+ * enabled, exposed at build time as NEXT_PUBLIC_GOOGLE_MAPS_KEY.
+ *
+ * If the key isn't set we silently fall back to a small text card —
+ * we don't ship a half-broken viewer.
  */
+const LAT = 43.6595;
+const LON = 6.9430;
+
 export default function PlascassierMini() {
   const containerRef = useRef(null);
 
@@ -17,131 +24,111 @@ export default function PlascassierMini() {
     const container = containerRef.current;
     if (!container) return;
 
+    const KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
+    if (!KEY) {
+      // Quiet fallback so the page still ships when the env var isn't wired.
+      const note = document.createElement('div');
+      note.className = 'plascassier-mini__fallback';
+      note.textContent = 'Plascassier · Provence';
+      container.appendChild(note);
+      return () => { container.removeChild(note); };
+    }
+
+    let alive = true;
+    let rafId = 0;
+
     const W = () => container.clientWidth;
     const H = () => container.clientHeight;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, logarithmicDepthBuffer: true });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     renderer.setSize(W(), H());
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, W() / H(), 0.1, 4000);
-    camera.position.set(0, 220, 460);
-    camera.lookAt(0, 0, 0);
+    const camera = new THREE.PerspectiveCamera(40, W() / H(), 1, 100000);
+    scene.add(camera);
 
-    // simple lighting — gives the cream extrusions readable shading
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    const key = new THREE.DirectionalLight(0xffffff, 0.85);
-    key.position.set(200, 400, 200);
-    scene.add(key);
-    const rim = new THREE.DirectionalLight(0x2fd8d8, 0.35);
-    rim.position.set(-300, 200, -200);
-    scene.add(rim);
+    // Initial orbit: 800 m back, 280 m up. Will rotate around the
+    // village centre at this radius.
+    const ORBIT_R = 800;
+    const ORBIT_H = 280;
 
-    const village = new THREE.Group();
-    scene.add(village);
-
-    let rafId = 0;
-    let alive = true;
-    const tick = (t) => {
+    (async () => {
+      const mod = await import('3d-tiles-renderer');
       if (!alive) return;
-      const k = t * 0.00018;
-      village.rotation.y = k;
-      renderer.render(scene, camera);
-      rafId = requestAnimationFrame(tick);
-    };
+      const { GoogleCloudAuthPlugin, TilesRenderer } = mod;
 
-    // Load + build mesh
-    fetch('/data/plascassier.json')
-      .then((r) => r.json())
-      .then((data) => {
+      const tiles = new TilesRenderer();
+      tiles.registerPlugin(new GoogleCloudAuthPlugin({ apiToken: KEY, autoRefreshToken: true }));
+      tiles.group.rotation.x = -Math.PI / 2; // align tiles' Z-up to scene Y-up
+      scene.add(tiles.group);
+
+      // Wait for the root tileset to load so we know the origin.
+      tiles.addEventListener('load-tile-set', () => {
         if (!alive) return;
-        const buildings = data.buildings || [];
-        // gather all points to compute bounds for centring
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        for (const b of buildings) {
-          for (const [x, y] of b.pts) {
-            if (x < minX) minX = x; if (x > maxX) maxX = x;
-            if (y < minY) minY = y; if (y > maxY) maxY = y;
-          }
-        }
-        const cx = (minX + maxX) / 2;
-        const cy = (minY + maxY) / 2;
+        // Re-centre camera on Plascassier after the tileset loads.
+        const sphere = new THREE.Sphere();
+        tiles.getBoundingSphere(sphere);
+        // Move tiles.group so the village centre sits at world origin.
+        tiles.group.position.sub(sphere.center);
+        // Now the tile data is centred; use a simple orbit.
+      });
 
-        const wallMat = new THREE.MeshStandardMaterial({
-          color: 0xf3eede,
-          roughness: 0.85,
-          metalness: 0.0,
-        });
-        const roofMat = new THREE.MeshStandardMaterial({
-          color: 0x0b6e6e,
-          roughness: 0.9,
-          metalness: 0.0,
-        });
-
-        for (const b of buildings) {
-          const shape = new THREE.Shape();
-          const pts = b.pts;
-          if (pts.length < 3) continue;
-          shape.moveTo(pts[0][0] - cx, -(pts[0][1] - cy));
-          for (let i = 1; i < pts.length; i++) {
-            shape.lineTo(pts[i][0] - cx, -(pts[i][1] - cy));
-          }
-          shape.closePath();
-          const geom = new THREE.ExtrudeGeometry(shape, {
-            depth: b.h,
-            bevelEnabled: false,
-            curveSegments: 1,
-          });
-          // ExtrudeGeometry extrudes along +Z; we want +Y (up).
-          geom.rotateX(-Math.PI / 2);
-          const mesh = new THREE.Mesh(geom, [wallMat, roofMat]);
-          // index 0 = front/back faces (extrude caps → roof + floor),
-          // index 1 = side faces (walls).
-          // ExtrudeGeometry actually uses 0 for the caps and 1 for the
-          // side faces in the order we built groups; assigning two
-          // materials gives the roof/wall split for free.
-          village.add(mesh);
-        }
-
-        // ground disc, very subtle, so the model has a base
-        const groundGeom = new THREE.CircleGeometry(280, 64);
-        groundGeom.rotateX(-Math.PI / 2);
-        const ground = new THREE.Mesh(
-          groundGeom,
-          new THREE.MeshBasicMaterial({ color: 0x063a3a, transparent: true, opacity: 0.55 })
+      const target = new THREE.Vector3(0, 0, 0);
+      const tick = (t) => {
+        if (!alive) return;
+        const k = t * 0.00012;
+        camera.position.set(
+          Math.sin(k) * ORBIT_R,
+          ORBIT_H,
+          Math.cos(k) * ORBIT_R,
         );
-        ground.position.y = -0.1;
-        village.add(ground);
+        camera.lookAt(target);
+        camera.updateMatrixWorld();
 
+        tiles.setCamera(camera);
+        tiles.setResolutionFromRenderer(camera, renderer);
+        tiles.update();
+
+        renderer.render(scene, camera);
         rafId = requestAnimationFrame(tick);
-      })
-      .catch(() => {});
+      };
+      rafId = requestAnimationFrame(tick);
 
-    const onResize = () => {
-      renderer.setSize(W(), H());
-      camera.aspect = W() / H();
-      camera.updateProjectionMatrix();
-    };
-    const ro = new ResizeObserver(onResize);
-    ro.observe(container);
+      // attribution
+      const attr = document.createElement('div');
+      attr.className = 'plascassier-mini__attr';
+      attr.textContent = '© Google · Plascassier';
+      container.appendChild(attr);
+
+      const onResize = () => {
+        renderer.setSize(W(), H());
+        camera.aspect = W() / H();
+        camera.updateProjectionMatrix();
+      };
+      const ro = new ResizeObserver(onResize);
+      ro.observe(container);
+
+      const cleanup = () => {
+        ro.disconnect();
+        tiles.dispose();
+        renderer.dispose();
+        if (renderer.domElement.parentNode === container) {
+          container.removeChild(renderer.domElement);
+        }
+        if (attr.parentNode === container) container.removeChild(attr);
+      };
+      container.__cleanupTiles = cleanup;
+    })();
 
     return () => {
       alive = false;
       cancelAnimationFrame(rafId);
-      ro.disconnect();
-      scene.traverse((o) => {
-        if (o.geometry) o.geometry.dispose();
-        if (o.material) {
-          if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose());
-          else o.material.dispose();
-        }
-      });
-      renderer.dispose();
-      if (renderer.domElement.parentNode === container) {
-        container.removeChild(renderer.domElement);
+      if (container.__cleanupTiles) {
+        container.__cleanupTiles();
+        delete container.__cleanupTiles;
       }
     };
   }, []);
