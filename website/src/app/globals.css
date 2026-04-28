@@ -657,15 +657,16 @@ a { color: inherit; text-decoration: none; }
 .final__cta a.ghost:hover { background: rgba(243,238,222,0.1); }
 .final__spin {
   position: relative;
-  /* Bleed past the section's horizontal padding so the village spans
-     edge-to-edge of the viewport, then snug it against the section
-     above with a negative top margin so it reads as flush. */
+  /* Full-bleed: escape the section's horizontal padding so the village
+     spans the page edge to edge. Bottom of the stage cancels the
+     section's own bottom padding (80 px) so the rooftops sit flush
+     against the top of the footer. */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   margin-top: 56px;
-  margin-bottom: -110px;          /* eat into the section's bottom padding */
-  height: 480px;
+  margin-bottom: -80px;
+  height: 520px;
   pointer-events: none;
   overflow: hidden;
 }
@@ -686,27 +687,8 @@ a { color: inherit; text-decoration: none; }
   user-select: none;
   pointer-events: none;
 }
-.plascassier-mini__attr {
-  position: absolute; right: 12px; bottom: 10px;
-  font-family: 'JetBrains Mono'; font-size: 10px;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: rgba(243,238,222,0.75);
-  background: rgba(12,31,34,0.5);
-  padding: 4px 8px;
-  pointer-events: none;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-.plascassier-mini__fallback {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Instrument Serif', serif; font-style: italic;
-  font-size: clamp(28px, 4vw, 44px);
-  color: rgba(243,238,222,0.85);
-  letter-spacing: 0.02em;
-}
 @media (max-width: 640px) {
-  .final__spin { margin-top: 40px; margin-bottom: -72px; height: 320px; }
+  .final__spin { margin-top: 40px; margin-bottom: -56px; height: 340px; }
 }
 
 /* Footer */

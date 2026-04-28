@@ -20,7 +20,6 @@ export default function PlascassierMini() {
         preload="auto"
         aria-label="Plascassier, Provence — rotating photorealistic 3D capture"
       />
-      <div className="plascassier-mini__attr">© Google · Plascassier</div>
     </div>
   );
 }
