@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@mkkellogg/gaussian-splats-3d": "^0.4.0",
-    "3d-tiles-renderer": "^0.4.24",
     "next": "^14.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
