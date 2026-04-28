@@ -657,7 +657,6 @@ export default function Page() {
           the data, run a fleet or capture a block at a time, we&apos;ll reach out
           as seats open.
         </p>
-        <div className="final__spin"><PlascassierMini /></div>
         <div className="final__cta">
           <a className="big" href="mailto:hello@getdaita.com">
             hello@getdaita.com
@@ -668,6 +667,7 @@ export default function Page() {
             <a className="ghost" href="#contrib">Become a contributor</a>
           </div>
         </div>
+        <div className="final__spin"><PlascassierMini /></div>
       </section>
 
       <footer>
