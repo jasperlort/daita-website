@@ -688,7 +688,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 @media (max-width: 640px) {
-  .final__spin { margin-top: 8px; margin-bottom: -56px; height: 340px; }
+  .final__spin { display: none; }
 }
 
 /* Footer */
